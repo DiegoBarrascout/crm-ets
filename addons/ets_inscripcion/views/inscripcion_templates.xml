@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="formulario_inscripcion" name="Formulario de Inscripción">
+        <t t-call="website.layout">
+            <div class="container mt-4 mb-4">
+                <h1 class="text-center mb-4">Formulario de Inscripción Escuela Técnica Superior Kinal</h1>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <p><strong>Envía tu comprobante de pago y copia de tu DPI (ambos lados) al correo electrónico o al WhatsApp:</strong></p>
+                            <ul>
+                                <li>Correo Electrónico: <a href="mailto:Infoets@kinal.org.gt">Infoets@kinal.org.gt</a></li>
+                                <li>WhatsApp: <a href="http://bit.ly/escuelats">http://bit.ly/escuelats</a></li>
+                            </ul>
+                            <p><strong>A la hora de enviar el comprobante de depósito se debe enviar el nombre completo del participante.</strong></p>
+                        </div>
+
+                        <form action="/carreras-tecnicas/submit" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="lead_id" t-att-value="lead.id if lead else ''"/>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nombre Completo *</label>
+                                <input type="text" name="nombre" class="form-control" t-att-value="lead.contact_name or lead.partner_name or ''" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Número de teléfono *</label>
+                                <input type="text" name="telefono" class="form-control" t-att-value="lead.phone or ''" required="1"/>
+                                <small class="text-muted">Coloca tu número sin "-" y sin espacio. Si es extranjero coloca el código de área.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">WhatsApp *</label>
+                                <div>
+                                    <input type="radio" name="whatsapp" value="si"/> Sí
+                                    <input type="radio" name="whatsapp" value="no" class="ms-3"/> No
+                                </div>
+                                <small class="text-muted">Por favor indique si el número anterior tiene WhatsApp</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Tu correo *</label>
+                                <input type="email" name="correo" class="form-control" t-att-value="lead.email_from or ''" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Trabajador que lo atendió *</label>
+                                <select name="trabajador" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <option value="Manuel Barrientos">Manuel Barrientos</option>
+                                    <option value="Ruben Rivera">Ruben Rivera</option>
+                                    <option value="William Francisco">William Francisco</option>
+                                    <option value="José Chaj">José Chaj</option>
+                                    <option value="Antonio Escobar">Antonio Escobar</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Técnico Universitario</label>
+                                <select name="tcu" class="form-select">
+                                    <option value="No">No</option>
+                                    <option value="1er">Técnico Universitario (1er. año Carrera Técnica)</option>
+                                    <option value="2do">Técnico Universitario (2do. año Carrera Técnica)</option>
+                                    <option value="3er">Técnico Universitario (3er. año)</option>
+                                    <option value="egresado">Egresado del Centro Educativo</option>
+                                    <option value="estudiante">Estudiante del Centro Educativo</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Carrera Técnica a la que se inscribe *</label>
+                                <select name="carrera_tecnica" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <option>Topografía</option>
+                                    <option>Autodesk AutoCAD 2D &amp; 3D</option>
+                                    <option>Autodesk Revit Architecture</option>
+                                    <option>Autodesk Revit Structure &amp; MEP</option>
+                                    <option>Calderas de Vapor</option>
+                                    <option>Mecanismos del Automóvil (1er. año de Mecánica Automotriz)</option>
+                                    <option>Mecánica de Motores Gasolina (2do. año de Mecánica Automotriz)</option>
+                                    <option>Instalaciones Eléctricas Generales (1er. año de Electricidad Industrial)</option>
+                                    <option>Controles y Máquinas Eléctricas (2do. año de Electricidad Industrial)</option>
+                                    <option>Electrónica Industrial Analógica (1er. año de Electrónica Industrial)</option>
+                                    <option>Control Industrial y Sistemas programables (2do. año de Electrónica Industrial)</option>
+                                    <option>Fundamentos de la Construcción (1er. año Técnico en Construcción)</option>
+                                    <option>Mecánica de Motocicletas</option>
+                                    <option>Refrigeración Industrial y Aire Acondicionado</option>
+                                    <option>Soldadura Industrial</option>
+                                    <option>Aire Acondicionado Automotriz</option>
+                                    <option>Soldadura Industrial TIG</option>
+                                    <option>Certificación Nacional Técnico Frigorista</option>
+                                    <option>Automatización Industrial</option>
+                                    <option>Electromecánica Viernes</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Jornada *</label>
+                                <div>
+                                    <input type="radio" name="jornada" value="matutina" required="1"/> Matutina - sábados (08:00 a 12:30)
+                                </div>
+                                <div>
+                                    <input type="radio" name="jornada" value="vespertina"/> Vespertina - sábados (13:00 a 17:30)
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Edad (en número)</label>
+                                <input type="number" name="edad_numero" class="form-control" style="width:100px"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Edad *</label>
+                                <div>
+                                    <input type="radio" name="edad" value="menor" required="1"/> Menor de edad
+                                    <input type="radio" name="edad" value="mayor" class="ms-3"/> Mayor de edad
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Género *</label>
+                                <div>
+                                    <input type="radio" name="genero" value="masculino" required="1"/> Masculino
+                                    <input type="radio" name="genero" value="femenino" class="ms-3"/> Femenino
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Alumno *</label>
+                                <div>
+                                    <input type="radio" name="alumno" value="primer_ingreso" required="1"/> Primer Ingreso
+                                    <input type="radio" name="alumno" value="reingreso" class="ms-3"/> Reingreso
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Dirección vivienda</label>
+                                <textarea name="direccion_vivienda" class="form-control" rows="3"></textarea>
+                                <small class="text-muted">Coloque dirección completa de residencia (opcional)</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Departamento Regional *</label>
+                                <input type="text" name="departamento" class="form-control" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Municipio Regional *</label>
+                                <input type="text" name="municipio" class="form-control" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Cómo se enteró de Kinal? *</label>
+                                <select name="como_se_entero" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <option value="compañero_trabajo">Compañero de Trabajo</option>
+                                    <option value="exalumno_basicos">Soy Exalumno de Básicos</option>
+                                    <option value="exalumno_diversificado">Soy Exalumno de Diversificado</option>
+                                    <option value="alumno_basicos">Soy Alumno de Básicos</option>
+                                    <option value="alumno_diversificado">Soy Alumno de Diversificado</option>
+                                    <option value="empresa_familiar">Por la Empresa Familiar</option>
+                                    <option value="recomendacion">Recomendación de un Conocido</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Último Grado Aprobado *</label>
+                                <input type="text" name="ultimo_grado" class="form-control" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Empresa donde Labora</label>
+                                <input type="text" name="empresa" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono de la Empresa</label>
+                                <input type="text" name="telefono_empresa" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Cuál es el puesto que desempeña?</label>
+                                <input type="text" name="puesto" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Dirección de la Empresa</label>
+                                <input type="text" name="direccion_empresa" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿La empresa le paga los estudios?</label>
+                                <div>
+                                    <input type="radio" name="empresa_paga" value="si"/> Sí
+                                    <input type="radio" name="empresa_paga" value="no" class="ms-3"/> No
+                                    <input type="radio" name="empresa_paga" value="parcial" class="ms-3"/> Parcial
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Emitir recibo a nombre de:</label>
+                                <input type="text" name="recibo_nombre" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">NIT:</label>
+                                <input type="text" name="nit" class="form-control"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Posee Vehículo</label>
+                                <div>
+                                    <input type="radio" name="posee_vehiculo" value="si"/> Sí
+                                    <input type="radio" name="posee_vehiculo" value="no" class="ms-3"/> No
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Condiciones de Estudio:</label>
+                                <div class="border p-3 mb-2" style="max-height:200px;overflow-y:scroll;font-size:0.85em;">
+                                    Declaro que: He recibido la Normativa de Evaluación y Convivencia de la Escuela Técnica Superior Kinal y me comprometo a cumplirla. Conozco lo señalado en Actitud y Presentación personal, así como Uso y Cuidado de las Instalaciones, y me obligo a no incurrir en ninguna Falta que ponga en riesgo la continuidad de mis estudios. Comprendo que Fundación Kinal ofrece a jóvenes y adultos una formación integral a través de distintos programas educativos, por lo que me comprometo a realizar puntualmente los aportes económicos que correspondan a mis estudios dentro de los primeros cinco días de cada mes, sin necesidad de cobro o requerimiento alguno. Acepto las medidas oportunas de la Escuela Técnica Superior Kinal si incurriere en atraso a partir de dos meses en los aportes convenidos. Informaré lo más rápido posible a la Escuela Técnica Superior Kinal cuando por algún motivo no pueda continuar con mis estudios. Sí el alumno es menor de edad o patrocinado total o parcialmente por alguna empresa, acepto que la Escuela Técnica Superior Kinal informe al encargado o responsable, acerca del rendimiento de los estudios, cuando fuere requerido o como sea pactado al momento de la inscripción. Todos los cursos o carreras técnicas deberán contar con un número mínimo de alumnos para su apertura. NOTA: No se hace ningún reembolsó si después de inscrito el estudiante, no se presenta a clases o si decide retirarse antes o después de iniciadas las actividades de la Carrera Técnica que este optando, salvo cuando no se aperture un curso o Carrera Técnica con el número mínimo de estudiantes.
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="acepta_condiciones" value="1" required="1"/>
+                                    <label> Acepto las condiciones de estudio *</label>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
