@@ -1,5 +1,6 @@
 from odoo import http
 from odoo.http import request
+from datetime import date
 
 class EtsInscripcion(http.Controller):
 
@@ -28,9 +29,22 @@ class EtsInscripcion(http.Controller):
         if not lead:
             return request.redirect('/contactus-thank-you')
 
+        # Validar fecha
+        fecha_str = kwargs.get('fecha_inscripcion')
+        fecha = None
+        if fecha_str:
+            try:
+                fecha = date.fromisoformat(fecha_str)
+                if fecha > date.today():
+                    fecha = date.today()
+            except ValueError:
+                fecha = date.today()
+
         lead.sudo().write({
+            'x_cui': kwargs.get('cui'),
             'x_whatsapp': kwargs.get('whatsapp'),
             'x_jornada': kwargs.get('jornada'),
+            'x_fecha_inscripcion': fecha,
             'x_edad_numero': int(kwargs.get('edad_numero') or 0),
             'x_edad': kwargs.get('edad'),
             'x_genero': kwargs.get('genero'),
@@ -53,6 +67,10 @@ class EtsInscripcion(http.Controller):
             'x_posee_vehiculo': kwargs.get('posee_vehiculo'),
             'x_tipo_vehiculo': kwargs.get('tipo_vehiculo'),
             'x_placa_vehiculo': kwargs.get('placa_vehiculo'),
+            'x_carrera_tcu': kwargs.get('carrera_tcu'),
+            'x_especialidad_tcu': kwargs.get('especialidad_tcu'),
+            'x_nombre_alumno': kwargs.get('nombre_alumno'),
+            'x_dpi': kwargs.get('dpi'),
             'x_acepta_condiciones': True if kwargs.get('acepta_condiciones') else False,
             'x_formulario_completo': True,
         })

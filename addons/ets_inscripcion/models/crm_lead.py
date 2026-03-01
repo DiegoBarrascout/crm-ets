@@ -5,11 +5,13 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
     x_token = fields.Char(string='Token de Inscripción', readonly=True, copy=False)
+    x_cui = fields.Char(string='CUI')
     x_whatsapp = fields.Selection([('si', 'Sí'), ('no', 'No')], string='WhatsApp')
     x_jornada = fields.Selection([
         ('matutina', 'Matutina - sábados (08:00 a 12:30)'),
         ('vespertina', 'Vespertina - sábados (13:00 a 17:30)'),
     ], string='Jornada')
+    x_fecha_inscripcion = fields.Date(string='Fecha de Inscripción')
     x_edad_numero = fields.Integer(string='Edad (en número)')
     x_edad = fields.Selection([('menor', 'Menor de edad'), ('mayor', 'Mayor de edad')], string='Edad')
     x_genero = fields.Selection([('masculino', 'Masculino'), ('femenino', 'Femenino')], string='Género')
@@ -44,6 +46,10 @@ class CrmLead(models.Model):
     x_posee_vehiculo = fields.Selection([('si', 'Sí'), ('no', 'No')], string='Posee Vehículo')
     x_tipo_vehiculo = fields.Selection([('carro', 'Carro'), ('moto', 'Moto')], string='Tipo de Vehículo')
     x_placa_vehiculo = fields.Char(string='Placa del Vehículo')
+    x_carrera_tcu = fields.Char(string='Carrera Técnica Universitaria')
+    x_especialidad_tcu = fields.Char(string='Especialidad TCU')
+    x_nombre_alumno = fields.Char(string='Nombre del Alumno')
+    x_dpi = fields.Char(string='DPI')
     x_acepta_condiciones = fields.Boolean(string='Acepta Condiciones de Estudio')
     x_formulario_completo = fields.Boolean(string='Formulario Completo', default=False)
 

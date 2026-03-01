@@ -15,7 +15,6 @@
                             </ul>
                         </div>
 
-                        <!-- Indicador de pasos -->
                         <div class="d-flex justify-content-between mb-4">
                             <div class="text-center" id="ind-1">
                                 <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px;background:#008f8c;color:white;">1</div>
@@ -42,7 +41,6 @@
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 1: Datos Personales</h4>
-
                                 <div class="mb-3">
                                     <label class="form-label">Nombre Completo</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
@@ -53,8 +51,13 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Número de teléfono *</label>
-                                    <input type="text" name="telefono" class="form-control" t-att-value="lead.phone or ''" required="1"/>
-                                    <small class="text-muted">Sin "-" ni espacios.</small>
+                                    <input type="text" name="telefono" id="telefono" class="form-control" t-att-value="lead.phone or ''" maxlength="8" required="1"/>
+                                    <small class="text-muted">8 dígitos, sin "-" ni espacios.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">CUI *</label>
+                                    <input type="text" name="cui" id="cui" class="form-control" maxlength="13" required="1"/>
+                                    <small class="text-muted">13 dígitos numéricos.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">WhatsApp *</label>
@@ -69,7 +72,38 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Técnico Universitario</label>
-                                    <input type="text" class="form-control bg-light" t-att-value="lead.x_CarreraISTMO or ''" readonly="1"/>
+                                    <input type="text" class="form-control bg-light" id="tcu_valor" t-att-value="lead.x_CarreraISTMO or ''" readonly="1"/>
+                                </div>
+                                <div class="mb-3 d-none" id="campo_carrera_tcu">
+                                    <label class="form-label">Carrera Técnica Universitaria *</label>
+                                    <select name="carrera_tcu" id="carrera_tcu" class="form-select">
+                                        <option value="">Seleccione...</option>
+                                        <option value="Construcción">Construcción</option>
+                                        <option value="Desarrollo de Aplicaciones Empresariales">Desarrollo de Aplicaciones Empresariales</option>
+                                        <option value="Electricidad Industrial">Electricidad Industrial</option>
+                                        <option value="Electrónica Industrial">Electrónica Industrial</option>
+                                        <option value="Mecánica Automotriz">Mecánica Automotriz</option>
+                                        <option value="Mecánica Industrial">Mecánica Industrial</option>
+                                        <option value="Telecomunicaciones">Telecomunicaciones</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 d-none" id="campo_especialidad">
+                                    <label class="form-label">Especialidad *</label>
+                                    <select name="especialidad_tcu" id="especialidad_tcu" class="form-select">
+                                        <option value="">Seleccione...</option>
+                                        <option value="Mecánica de Motores">Mecánica de Motores</option>
+                                        <option value="Electromecánica Automotriz">Electromecánica Automotriz</option>
+                                        <option value="Inyección Electrónica Automotriz">Inyección Electrónica Automotriz</option>
+                                        <option value="Controles y Maquinas Eléctricas Generales">Controles y Maquinas Eléctricas Generales</option>
+                                        <option value="Automatización Industrial">Automatización Industrial</option>
+                                        <option value="Control Industrial con Sistemas Programables">Control Industrial con Sistemas Programables</option>
+                                        <option value="AutoCAD 2D &amp; 3D (Certificado Autodesk)">AutoCAD 2D &amp; 3D (Certificado Autodesk)</option>
+                                        <option value="Revit Architecture (Certificado Autodesk)">Revit Architecture (Certificado Autodesk)</option>
+                                        <option value="CCNP">CCNP</option>
+                                        <option value="CCNA">CCNA</option>
+                                        <option value="Fullstack Asp. NET">Fullstack Asp. NET</option>
+                                        <option value="Fullstack JAVA">Fullstack JAVA</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Carrera Técnica</label>
@@ -92,10 +126,14 @@
                             <!-- PASO 2 -->
                             <div class="step d-none" id="step-2">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 2: Información Adicional</h4>
-
+                                <div class="mb-3">
+                                    <label class="form-label">Fecha de Inscripción *</label>
+                                    <input type="date" name="fecha_inscripcion" id="fecha_inscripcion" class="form-control" required="1"/>
+                                    <small class="text-muted">No puede seleccionar fechas futuras.</small>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Edad (en número)</label>
-                                    <input type="number" name="edad_numero" id="edad_numero" class="form-control" style="width:100px" oninput="actualizarEdad(this.value)"/>
+                                    <input type="number" name="edad_numero" id="edad_numero" class="form-control" style="width:100px" min="1" max="99" oninput="actualizarEdad(this.value)"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Edad *</label>
@@ -120,7 +158,7 @@
                                 </div>
                                 <div class="mb-3 d-none" id="campo_carne">
                                     <label class="form-label">Número de Carné</label>
-                                    <input type="text" name="carne" class="form-control" placeholder="Letras y números"/>
+                                    <input type="text" name="carne" id="carne" class="form-control" placeholder="Letras y números"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Dirección vivienda</label>
@@ -173,14 +211,14 @@
                             <!-- PASO 3 -->
                             <div class="step d-none" id="step-3">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 3: Datos Laborales y Facturación</h4>
-
                                 <div class="mb-3">
                                     <label class="form-label">Empresa donde Labora</label>
                                     <input type="text" name="empresa" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Teléfono de la Empresa</label>
-                                    <input type="text" name="telefono_empresa" class="form-control"/>
+                                    <input type="text" name="telefono_empresa" id="telefono_empresa" class="form-control" maxlength="8"/>
+                                    <small class="text-muted">8 dígitos, sin "-" ni espacios.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">¿Cuál es el puesto que desempeña?</label>
@@ -203,8 +241,9 @@
                                     <input type="text" name="recibo_nombre" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">NIT:</label>
-                                    <input type="text" name="nit" class="form-control"/>
+                                    <label class="form-label">NIT</label>
+                                    <input type="text" name="nit" id="nit" class="form-control" placeholder="Ej: 31595014 o 31595014K"/>
+                                    <small class="text-muted">Sin guión. Solo números y la letra K al final si aplica.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Posee Vehículo</label>
@@ -240,14 +279,23 @@
                                     <div class="border p-3 mb-2" style="max-height:200px;overflow-y:scroll;font-size:0.85em;">
                                         Declaro que: He recibido la Normativa de Evaluación y Convivencia de la Escuela Técnica Superior Kinal y me comprometo a cumplirla. Conozco lo señalado en Actitud y Presentación personal, así como Uso y Cuidado de las Instalaciones, y me obligo a no incurrir en ninguna Falta que ponga en riesgo la continuidad de mis estudios. Comprendo que Fundación Kinal ofrece a jóvenes y adultos una formación integral a través de distintos programas educativos, por lo que me comprometo a realizar puntualmente los aportes económicos que correspondan a mis estudios dentro de los primeros cinco días de cada mes, sin necesidad de cobro o requerimiento alguno. Acepto las medidas oportunas de la Escuela Técnica Superior Kinal si incurriere en atraso a partir de dos meses en los aportes convenidos. Informaré lo más rápido posible a la Escuela Técnica Superior Kinal cuando por algún motivo no pueda continuar con mis estudios. Todos los cursos o carreras técnicas deberán contar con un número mínimo de alumnos para su apertura. NOTA: No se hace ningún reembolsó si después de inscrito el estudiante, no se presenta a clases o si decide retirarse antes o después de iniciadas las actividades de la Carrera Técnica.
                                     </div>
-                                    <div>
-                                        <input type="checkbox" name="acepta_condiciones" value="1" required="1"/>
+                                    <div class="mb-3">
+                                        <input type="checkbox" name="acepta_condiciones" id="acepta_condiciones" value="1"/>
                                         <label> Acepto las condiciones de estudio *</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre del Alumno *</label>
+                                        <input type="text" name="nombre_alumno" id="nombre_alumno" class="form-control" oninput="verificarCondiciones()"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">DPI *</label>
+                                        <input type="text" name="dpi" id="dpi" class="form-control" maxlength="13" oninput="verificarCondiciones()"/>
+                                        <small class="text-muted">13 dígitos numéricos.</small>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-secondary" onclick="prevStep(4)">← Anterior</button>
-                                    <button type="submit" class="btn btn-success btn-lg">Enviar</button>
+                                    <button type="submit" id="btn_enviar" class="btn btn-success btn-lg" disabled="1">Enviar</button>
                                 </div>
                             </div>
 
@@ -257,45 +305,187 @@
             </div>
 
             <script>
+                function sanitize(val) {
+                    if (!val) return '';
+                    return val.replace(/[&lt;&gt;"'`;]/g, '');
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Fecha máxima = hoy
+                    var today = new Date().toISOString().split('T')[0];
+                    var fechaInp = document.getElementById('fecha_inscripcion');
+                    if (fechaInp) fechaInp.setAttribute('max', today);
+
+                    // Mostrar carrera TCU si aplica
+                    var tcuVal = document.getElementById('tcu_valor');
+                    if (tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
+                        document.getElementById('campo_carrera_tcu').classList.remove('d-none');
+                    }
+
+                    // Carrera TCU muestra especialidad
+                    var carreraTcu = document.getElementById('carrera_tcu');
+                    if (carreraTcu) {
+                        carreraTcu.addEventListener('change', function() {
+                            var esp = document.getElementById('campo_especialidad');
+                            if (this.value) {
+                                esp.classList.remove('d-none');
+                            } else {
+                                esp.classList.add('d-none');
+                            }
+                        });
+                    }
+
+                    // Sanitizar al enviar
+                    var form = document.getElementById('inscripcion-form');
+                    if (form) {
+                        form.addEventListener('submit', function() {
+                            var inputs = this.querySelectorAll('input[type=text], textarea');
+                            inputs.forEach(function(inp) { inp.value = sanitize(inp.value); });
+                        });
+                    }
+
+                    // Validar teléfono: solo números
+                    var tel = document.getElementById('telefono');
+                    if (tel) tel.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                    });
+
+                    // CUI: solo números 13 dígitos
+                    var cui = document.getElementById('cui');
+                    if (cui) cui.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);
+                    });
+
+                    // Teléfono empresa
+                    var telEmp = document.getElementById('telefono_empresa');
+                    if (telEmp) telEmp.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                    });
+
+                    // NIT: números y K
+                    var nit = document.getElementById('nit');
+                    if (nit) nit.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^0-9kK]/g, '').toUpperCase();
+                    });
+
+                    // Carné: alfanumérico
+                    var carne = document.getElementById('carne');
+                    if (carne) carne.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+                    });
+
+                    // DPI: solo números 13 dígitos
+                    var dpi = document.getElementById('dpi');
+                    if (dpi) dpi.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);
+                        verificarCondiciones();
+                    });
+
+                    // Checkbox condiciones
+                    var chk = document.getElementById('acepta_condiciones');
+                    if (chk) chk.addEventListener('change', verificarCondiciones);
+                });
+
+                function verificarCondiciones() {
+                    var chk = document.getElementById('acepta_condiciones');
+                    var nombre = document.getElementById('nombre_alumno');
+                    var dpi = document.getElementById('dpi');
+                    var btn = document.getElementById('btn_enviar');
+                    if (chk &amp;&amp; nombre &amp;&amp; dpi &amp;&amp; btn) {
+                        if (chk.checked &amp;&amp; nombre.value.trim().length > 0 &amp;&amp; dpi.value.length === 13) {
+                            btn.removeAttribute('disabled');
+                        } else {
+                            btn.setAttribute('disabled', '1');
+                        }
+                    }
+                }
+
                 function nextStep(current) {
+                    if (current === 1) {
+                        var tel = document.getElementById('telefono');
+                        if (!tel.value || tel.value.length !== 8) {
+                            alert('El teléfono debe tener exactamente 8 dígitos.');
+                            return;
+                        }
+                        var cui = document.getElementById('cui');
+                        if (!cui.value || cui.value.length !== 13) {
+                            alert('El CUI debe tener exactamente 13 dígitos.');
+                            return;
+                        }
+                        var whatsapp = document.querySelector('input[name=whatsapp]:checked');
+                        if (!whatsapp) { alert('Por favor indique si tiene WhatsApp.'); return; }
+                        var jornada = document.querySelector('input[name=jornada]:checked');
+                        if (!jornada) { alert('Por favor seleccione una jornada.'); return; }
+                        var tcuVal = document.getElementById('tcu_valor');
+                        if (tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
+                            var carreraTcu = document.getElementById('carrera_tcu');
+                            if (!carreraTcu.value) { alert('Por favor seleccione la carrera TCU.'); return; }
+                            var espTcu = document.getElementById('especialidad_tcu');
+                            if (!espTcu.value) { alert('Por favor seleccione la especialidad.'); return; }
+                        }
+                    }
+                    if (current === 2) {
+                        var fecha = document.getElementById('fecha_inscripcion');
+                        if (!fecha.value) { alert('Por favor ingrese la fecha de inscripción.'); return; }
+                        var edad = document.querySelector('input[name=edad]:checked');
+                        if (!edad) { alert('Por favor seleccione si es menor o mayor de edad.'); return; }
+                        var genero = document.querySelector('input[name=genero]:checked');
+                        if (!genero) { alert('Por favor seleccione su género.'); return; }
+                        var alumno = document.querySelector('input[name=alumno]:checked');
+                        if (!alumno) { alert('Por favor seleccione si es primer ingreso o reingreso.'); return; }
+                        var dpto = document.querySelector('input[name=departamento]');
+                        if (!dpto.value.trim()) { alert('Por favor ingrese su departamento.'); return; }
+                        var mun = document.querySelector('input[name=municipio]');
+                        if (!mun.value.trim()) { alert('Por favor ingrese su municipio.'); return; }
+                        var entero = document.querySelector('select[name=como_se_entero]');
+                        if (!entero.value) { alert('Por favor indique cómo se enteró de Kinal.'); return; }
+                        var grado = document.querySelector('input[name=ultimo_grado]');
+                        if (!grado.value.trim()) { alert('Por favor ingrese su último grado aprobado.'); return; }
+                    }
                     document.getElementById('step-' + current).classList.add('d-none');
                     document.getElementById('step-' + (current + 1)).classList.remove('d-none');
                     updateIndicators(current + 1);
                     window.scrollTo(0, 0);
                 }
+
                 function prevStep(current) {
                     document.getElementById('step-' + current).classList.add('d-none');
                     document.getElementById('step-' + (current - 1)).classList.remove('d-none');
                     updateIndicators(current - 1);
                     window.scrollTo(0, 0);
                 }
+
                 function updateIndicators(active) {
                     for (var i = 1; i &lt;= 4; i++) {
                         var circle = document.querySelector('#ind-' + i + ' div');
                         circle.style.background = (i === active) ? '#008f8c' : '#ccc';
                     }
                 }
+
                 function actualizarEdad(val) {
                     val = parseInt(val);
                     if (!isNaN(val)) {
-                        document.getElementById('edad_menor').disabled = val >= 18;
+                        document.getElementById('edad_menor').disabled = val &gt;= 18;
                         document.getElementById('edad_mayor').disabled = val &lt; 18;
-                        if (val >= 18) {
+                        if (val &gt;= 18) {
                             document.getElementById('edad_mayor').checked = true;
                         } else {
                             document.getElementById('edad_menor').checked = true;
                         }
                     }
                 }
+
                 function toggleCarne(show) {
                     document.getElementById('campo_carne').classList.toggle('d-none', !show);
                 }
+
                 function toggleRecomendante(val) {
                     var showNombre = ['compañero_trabajo', 'familiar', 'conocido'].includes(val);
                     var showParentesco = val === 'familiar';
                     document.getElementById('campo_recomendante').classList.toggle('d-none', !showNombre);
                     document.getElementById('campo_parentesco').classList.toggle('d-none', !showParentesco);
                 }
+
                 function toggleVehiculo(show) {
                     document.getElementById('campo_vehiculo').classList.toggle('d-none', !show);
                 }
