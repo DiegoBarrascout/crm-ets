@@ -7,6 +7,7 @@
     'data': [
         'views/crm_lead_views.xml',
         'views/inscripcion_templates.xml',
+        'views/mail_templates.xml',
     ],
     'installable': True,
     'auto_install': False,

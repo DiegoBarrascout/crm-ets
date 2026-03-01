@@ -3,53 +3,7 @@
     <record id="crm_lead_form_inherit_ets" model="ir.ui.view">
         <field name="name">crm.lead.form.ets</field>
         <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_lead_all_leads"/>
-        <field name="arch" type="xml">
-            <xpath expr="//sheet" position="after">
-                <notebook>
-                    <page string="Datos de Inscripción">
-                        <group string="Datos Personales">
-                            <field name="x_whatsapp"/>
-                            <field name="x_jornada"/>
-                            <field name="x_edad_numero"/>
-                            <field name="x_edad"/>
-                            <field name="x_genero"/>
-                            <field name="x_alumno"/>
-                            <field name="x_direccion_vivienda"/>
-                            <field name="x_departamento"/>
-                            <field name="x_municipio"/>
-                            <field name="x_como_se_entero"/>
-                            <field name="x_ultimo_grado"/>
-                        </group>
-                        <group string="Datos Laborales">
-                            <field name="x_empresa"/>
-                            <field name="x_telefono_empresa"/>
-                            <field name="x_puesto"/>
-                            <field name="x_direccion_empresa"/>
-                            <field name="x_empresa_paga"/>
-                        </group>
-                        <group string="Datos de Facturación">
-                            <field name="x_recibo_nombre"/>
-                            <field name="x_nit"/>
-                            <field name="x_posee_vehiculo"/>
-                        </group>
-                        <group string="Condiciones">
-                            <field name="x_acepta_condiciones"/>
-                            <field name="x_formulario_completo"/>
-                        </group>
-                    </page>
-                </notebook>
-            </xpath>
-        </field>
-    </record>
-</odoo>
-EOFcat > /opt/mi-proyecto-odoo/addons/ets_inscripcion/views/crm_lead_views.xml << 'EOF'
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <record id="crm_lead_form_inherit_ets" model="ir.ui.view">
-        <field name="name">crm.lead.form.ets</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_lead_all_leads"/>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="after">
                 <notebook>

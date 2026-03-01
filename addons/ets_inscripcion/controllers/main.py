@@ -5,13 +5,13 @@ class EtsInscripcion(http.Controller):
 
     @http.route('/carreras-tecnicas', type='http', auth='public', website=True)
     def formulario_inscripcion(self, **kwargs):
-        lead_id = kwargs.get('id')
+        token = kwargs.get('token')
         lead = None
 
-        if lead_id:
-            lead = request.env['crm.lead'].sudo().browse(int(lead_id))
-            if not lead.exists():
-                lead = None
+        if token:
+            lead = request.env['crm.lead'].sudo().search([('x_token', '=', token)], limit=1)
+            if not lead:
+                return request.render('website.404')
 
         return request.render('ets_inscripcion.formulario_inscripcion', {
             'lead': lead,
@@ -19,13 +19,13 @@ class EtsInscripcion(http.Controller):
 
     @http.route('/carreras-tecnicas/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
     def formulario_submit(self, **kwargs):
-        lead_id = kwargs.get('lead_id')
+        token = kwargs.get('token')
 
-        if not lead_id:
+        if not token:
             return request.redirect('/contactus-thank-you')
 
-        lead = request.env['crm.lead'].sudo().browse(int(lead_id))
-        if not lead.exists():
+        lead = request.env['crm.lead'].sudo().search([('x_token', '=', token)], limit=1)
+        if not lead:
             return request.redirect('/contactus-thank-you')
 
         lead.sudo().write({
@@ -35,10 +35,13 @@ class EtsInscripcion(http.Controller):
             'x_edad': kwargs.get('edad'),
             'x_genero': kwargs.get('genero'),
             'x_alumno': kwargs.get('alumno'),
+            'x_carne': kwargs.get('carne'),
             'x_direccion_vivienda': kwargs.get('direccion_vivienda'),
             'x_departamento': kwargs.get('departamento'),
             'x_municipio': kwargs.get('municipio'),
             'x_como_se_entero': kwargs.get('como_se_entero'),
+            'x_nombre_recomendante': kwargs.get('nombre_recomendante'),
+            'x_parentesco': kwargs.get('parentesco'),
             'x_ultimo_grado': kwargs.get('ultimo_grado'),
             'x_empresa': kwargs.get('empresa'),
             'x_telefono_empresa': kwargs.get('telefono_empresa'),
@@ -48,6 +51,8 @@ class EtsInscripcion(http.Controller):
             'x_recibo_nombre': kwargs.get('recibo_nombre'),
             'x_nit': kwargs.get('nit'),
             'x_posee_vehiculo': kwargs.get('posee_vehiculo'),
+            'x_tipo_vehiculo': kwargs.get('tipo_vehiculo'),
+            'x_placa_vehiculo': kwargs.get('placa_vehiculo'),
             'x_acepta_condiciones': True if kwargs.get('acepta_condiciones') else False,
             'x_formulario_completo': True,
         })
