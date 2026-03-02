@@ -40,7 +40,10 @@ class EtsInscripcion(http.Controller):
             except ValueError:
                 fecha = date.today()
 
-        lead.sudo().write({
+        # Nombre del alumno actualiza el nombre de la oportunidad
+        nombre_alumno = kwargs.get('nombre_alumno', '').strip()
+
+        vals = {
             'x_cui': kwargs.get('cui'),
             'x_whatsapp': kwargs.get('whatsapp'),
             'x_jornada': kwargs.get('jornada'),
@@ -69,10 +72,21 @@ class EtsInscripcion(http.Controller):
             'x_placa_vehiculo': kwargs.get('placa_vehiculo'),
             'x_carrera_tcu': kwargs.get('carrera_tcu'),
             'x_especialidad_tcu': kwargs.get('especialidad_tcu'),
-            'x_nombre_alumno': kwargs.get('nombre_alumno'),
+            'x_nombre_alumno': nombre_alumno,
             'x_dpi': kwargs.get('dpi'),
             'x_acepta_condiciones': True if kwargs.get('acepta_condiciones') else False,
             'x_formulario_completo': True,
-        })
+        }
+
+        # Actualizar teléfono si fue modificado
+        telefono = kwargs.get('telefono', '').strip()
+        if telefono:
+            vals['phone'] = telefono
+
+        # Actualizar nombre de la oportunidad con el nombre del alumno
+        if nombre_alumno:
+            vals['name'] = nombre_alumno
+
+        lead.sudo().write(vals)
 
         return request.redirect('/contactus-thank-you')

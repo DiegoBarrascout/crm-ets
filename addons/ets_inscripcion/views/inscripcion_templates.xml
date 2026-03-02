@@ -105,10 +105,12 @@
                                         <option value="Fullstack JAVA">Fullstack JAVA</option>
                                     </select>
                                 </div>
+                                <t t-if="lead.x_CarreraTecnica">
                                 <div class="mb-3">
                                     <label class="form-label">Carrera Técnica</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.x_CarreraTecnica or ''" readonly="1"/>
                                 </div>
+                                </t>
                                 <div class="mb-3">
                                     <label class="form-label">Jornada *</label>
                                     <div>
@@ -126,11 +128,6 @@
                             <!-- PASO 2 -->
                             <div class="step d-none" id="step-2">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 2: Información Adicional</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Fecha de Inscripción *</label>
-                                    <input type="date" name="fecha_inscripcion" id="fecha_inscripcion" class="form-control" required="1"/>
-                                    <small class="text-muted">No puede seleccionar fechas futuras.</small>
-                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Edad (en número)</label>
                                     <input type="number" name="edad_numero" id="edad_numero" class="form-control" style="width:100px" min="1" max="99" oninput="actualizarEdad(this.value)"/>
@@ -280,6 +277,7 @@
                                         Declaro que: He recibido la Normativa de Evaluación y Convivencia de la Escuela Técnica Superior Kinal y me comprometo a cumplirla. Conozco lo señalado en Actitud y Presentación personal, así como Uso y Cuidado de las Instalaciones, y me obligo a no incurrir en ninguna Falta que ponga en riesgo la continuidad de mis estudios. Comprendo que Fundación Kinal ofrece a jóvenes y adultos una formación integral a través de distintos programas educativos, por lo que me comprometo a realizar puntualmente los aportes económicos que correspondan a mis estudios dentro de los primeros cinco días de cada mes, sin necesidad de cobro o requerimiento alguno. Acepto las medidas oportunas de la Escuela Técnica Superior Kinal si incurriere en atraso a partir de dos meses en los aportes convenidos. Informaré lo más rápido posible a la Escuela Técnica Superior Kinal cuando por algún motivo no pueda continuar con mis estudios. Todos los cursos o carreras técnicas deberán contar con un número mínimo de alumnos para su apertura. NOTA: No se hace ningún reembolsó si después de inscrito el estudiante, no se presenta a clases o si decide retirarse antes o después de iniciadas las actividades de la Carrera Técnica.
                                     </div>
                                     <div class="mb-3">
+                                        <div class="mb-3"><label class="form-label">Fecha de Inscripción *</label><input type="date" name="fecha_inscripcion" id="fecha_inscripcion" class="form-control" required="1"/><small class="text-muted">No puede seleccionar fechas futuras.</small></div>
                                         <input type="checkbox" name="acepta_condiciones" id="acepta_condiciones" value="1"/>
                                         <label> Acepto las condiciones de estudio *</label>
                                     </div>
@@ -390,9 +388,10 @@
                     var chk = document.getElementById('acepta_condiciones');
                     var nombre = document.getElementById('nombre_alumno');
                     var dpi = document.getElementById('dpi');
+                    var fecha = document.getElementById('fecha_inscripcion');
                     var btn = document.getElementById('btn_enviar');
-                    if (chk &amp;&amp; nombre &amp;&amp; dpi &amp;&amp; btn) {
-                        if (chk.checked &amp;&amp; nombre.value.trim().length > 0 &amp;&amp; dpi.value.length === 13) {
+                    if (chk &amp;&amp; nombre &amp;&amp; dpi &amp;&amp; fecha &amp;&amp; btn) {
+                        if (chk.checked &amp;&amp; nombre.value.trim().length > 0 &amp;&amp; dpi.value.length === 13 &amp;&amp; fecha.value) {
                             btn.removeAttribute('disabled');
                         } else {
                             btn.setAttribute('disabled', '1');
@@ -425,8 +424,7 @@
                         }
                     }
                     if (current === 2) {
-                        var fecha = document.getElementById('fecha_inscripcion');
-                        if (!fecha.value) { alert('Por favor ingrese la fecha de inscripción.'); return; }
+
                         var edad = document.querySelector('input[name=edad]:checked');
                         if (!edad) { alert('Por favor seleccione si es menor o mayor de edad.'); return; }
                         var genero = document.querySelector('input[name=genero]:checked');
