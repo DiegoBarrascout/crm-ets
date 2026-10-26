@@ -52,9 +52,21 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="x_kanban_curso" class="text-muted" style="white-space:normal;"/>
-                <field name="x_kanban_detalle" class="text-muted small"/>
+            <xpath expr="//t[@t-name='card']" position="replace">
+                <t t-name="card">
+                    <widget name="web_ribbon" title="lost" bg_color="text-bg-danger" invisible="probability &gt; 0 or active"/>
+                    <field class="fw-bold fs-5" name="name"/>
+                    <field name="x_kanban_curso" class="text-muted" style="white-space:normal;"/>
+                    <field name="x_kanban_detalle" class="text-muted small"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="lead_properties" widget="properties"/>
+                    <footer class="pt-1">
+                        <div class="d-flex mt-auto align-items-center">
+                            <field name="priority" widget="priority" groups="base.group_user" class="me-2"/>
+                        </div>
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-auto"/>
+                    </footer>
+                </t>
             </xpath>
         </field>
     </record>
