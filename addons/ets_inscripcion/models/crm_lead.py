@@ -59,6 +59,14 @@ class CrmLead(models.Model):
         copy=False,
     )
     x_curso_otro = fields.Char(string='Otro curso técnico')
+    x_vinculo_centro = fields.Selection(
+        [
+            ('egresado', 'Egresado del Centro Educativo'),
+            ('estudiante', 'Estudiante actual del Centro Educativo'),
+            ('ninguno', 'Ninguno de los anteriores'),
+        ],
+        string='Vínculo con el Centro Educativo',
+    )
 
     @api.model
     def _ets_ensure_tic_selections(self):
@@ -66,8 +74,8 @@ class CrmLead(models.Model):
         Field = self.env['ir.model.fields'].sudo()
         Selection = self.env['ir.model.fields.selection'].sudo()
         extras = {
-            'x_CarreraTecnica': [v for v, _l in catalogs.CARRERAS_TIC],
-            'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_TIC],
+            'x_CarreraTecnica': catalogs.all_course_values(),
+            'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_ETS + catalogs.TRABAJADORES_TIC],
         }
         for fname, values in extras.items():
             field = Field.search([('model', '=', 'crm.lead'), ('name', '=', fname)], limit=1)

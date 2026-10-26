@@ -70,12 +70,25 @@
                                         <input type="radio" name="whatsapp" value="no" class="ms-3"/> No
                                     </div>
                                 </div>
+                                <t t-if="lead and lead.x_vinculo_centro">
                                 <div class="mb-3">
-                                    <label class="form-label">Trabajador que lo atendió</label>
+                                    <label class="form-label">Vínculo con el Centro Educativo</label>
+                                    <input type="text" class="form-control bg-light" readonly="1"
+                                           t-att-value="'Egresado del Centro Educativo' if lead.x_vinculo_centro == 'egresado' else ('Estudiante actual del Centro Educativo' if lead.x_vinculo_centro == 'estudiante' else 'Ninguno de los anteriores')"/>
+                                </div>
+                                </t>
+                                <t t-if="lead and lead.x_vinculo_centro in ('egresado', 'estudiante')">
+                                <div class="mb-3">
+                                    <label class="form-label">Número de carné</label>
+                                    <input type="text" class="form-control bg-light" t-att-value="lead.x_carne or ''" readonly="1"/>
+                                </div>
+                                </t>
+                                <div class="mb-3">
+                                    <label class="form-label">Colaborador que lo atendió</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.x_trabajadorQueAtendio or ''" readonly="1"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Técnico Universitario</label>
+                                    <label class="form-label">Técnico Superior Universitario</label>
                                     <input type="text" class="form-control bg-light" id="tcu_valor" t-att-value="lead.x_CarreraISTMO or ''" readonly="1"/>
                                 </div>
                                 <div class="mb-3 d-none" id="campo_carrera_tcu">
@@ -168,7 +181,7 @@
                                 </div>
                                 <div class="mb-3 d-none" id="campo_carne">
                                     <label class="form-label">Número de Carné</label>
-                                    <input type="text" name="carne" id="carne" class="form-control" placeholder="Letras y números"/>
+                                    <input type="text" name="carne" id="carne" class="form-control" placeholder="Letras y números" t-att-value="lead.x_carne or ''"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Dirección vivienda</label>
