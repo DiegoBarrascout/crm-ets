@@ -1,0 +1,12 @@
+name: Bug
+description: Error
+title: '[ETS-???] '
+labels: [bug]
+body:
+  - type: textarea
+    id: d
+    attributes:
+      label: Descripción
+      description: Repro, esperado vs actual
+    validations:
+      required: true

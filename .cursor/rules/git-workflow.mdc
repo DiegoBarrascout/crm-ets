@@ -1,0 +1,13 @@
+---
+description: Flujo Git estilo Echovate — no trabajar en main
+alwaysApply: true
+---
+
+# Git CRM ETS
+
+- Rama principal: `main`. Solo entra código por PR (squash).
+- Tickets `ETS-XXX`. Rama `ETS-XXX-slug`. Commit `tipo(ETS-XXX): …`. PR `[ETS-XXX] …` + `Closes #N`.
+- Husky: no saltar hooks. `pnpm lint` antes de commitear si el hook no está instalado.
+- Si detectas el working tree en `main` con cambios: crea la rama del ticket **antes** de commitear. No hagas reset duro.
+- No pushees, no mergees y no abras PR salvo que el usuario lo pida.
+- Detalle: `docs/GITHUB-WORKFLOW.md` y skill `ets-github-workflow`.

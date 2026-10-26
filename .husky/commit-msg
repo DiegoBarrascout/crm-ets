@@ -1,0 +1,9 @@
+#!/bin/sh
+msg=$(head -n1 "$1")
+case "$msg" in
+  Merge\ *|Revert\ *) exit 0 ;;
+esac
+echo "$msg" | grep -Eq '^(feat|fix|docs|chore|refactor|test|ci|style)(\(ETS-[0-9]{3}\))!?: .+' || {
+  echo "commit-msg: usa Conventional Commits con ticket, p. ej. feat(ETS-012): …" >&2
+  exit 1
+}
