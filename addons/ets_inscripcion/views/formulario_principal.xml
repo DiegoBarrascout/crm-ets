@@ -35,6 +35,28 @@
                                     <input type="email" name="email_from" class="form-control" required="1"/>
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">¿Es egresado o estudiante actual del Centro Educativo? *</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="vinculo_centro" id="vinculo_egresado" value="egresado" required="1"/>
+                                            <label class="form-check-label" for="vinculo_egresado">Egresado</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="vinculo_centro" id="vinculo_estudiante" value="estudiante"/>
+                                            <label class="form-check-label" for="vinculo_estudiante">Estudiante actual</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="vinculo_centro" id="vinculo_ninguno" value="ninguno"/>
+                                            <label class="form-check-label" for="vinculo_ninguno">Ninguno de esos casos</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 d-none" id="campo_carnet">
+                                    <label class="form-label">Número de carné *</label>
+                                    <input type="text" name="carne" id="carne_principal" class="form-control" placeholder="Letras y números"/>
+                                    <small class="text-muted">Alfanumérico.</small>
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label"><t t-esc="cat['label_tsu']"/> *</label>
                                     <select name="x_CarreraISTMO" id="tcu_principal" class="form-select" required="1">
                                         <option value="">Seleccione...</option>
@@ -192,6 +214,30 @@
                             otroWrap.classList.toggle('d-none', this.value !== 'Otras');
                         });
                     }
+
+                    var carnetWrap = document.getElementById('campo_carnet');
+                    var carnetInp = document.getElementById('carne_principal');
+                    function toggleCarnet() {
+                        var sel = document.querySelector('input[name=vinculo_centro]:checked');
+                        var show = sel &amp;&amp; (sel.value === 'egresado' || sel.value === 'estudiante');
+                        if (carnetWrap) carnetWrap.classList.toggle('d-none', !show);
+                        if (carnetInp) {
+                            if (show) carnetInp.setAttribute('required', 'required');
+                            else {
+                                carnetInp.removeAttribute('required');
+                                carnetInp.value = '';
+                            }
+                        }
+                    }
+                    document.querySelectorAll('input[name=vinculo_centro]').forEach(function (r) {
+                        r.addEventListener('change', toggleCarnet);
+                    });
+                    if (carnetInp) {
+                        carnetInp.addEventListener('input', function () {
+                            this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+                        });
+                    }
+                    toggleCarnet();
                 });
             </script>
         </t>

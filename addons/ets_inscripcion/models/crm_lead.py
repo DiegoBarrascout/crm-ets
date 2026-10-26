@@ -59,6 +59,14 @@ class CrmLead(models.Model):
         copy=False,
     )
     x_curso_otro = fields.Char(string='Otro curso técnico')
+    x_vinculo_centro = fields.Selection(
+        [
+            ('egresado', 'Egresado del Centro Educativo'),
+            ('estudiante', 'Estudiante actual del Centro Educativo'),
+            ('ninguno', 'Ninguno de los anteriores'),
+        ],
+        string='Vínculo con el Centro Educativo',
+    )
 
     @api.model
     def _ets_ensure_tic_selections(self):

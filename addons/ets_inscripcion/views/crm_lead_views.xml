@@ -10,6 +10,8 @@
                     <page string="Datos de Inscripción">
                         <group string="Datos Personales">
                             <field name="x_area"/>
+                            <field name="x_vinculo_centro"/>
+                            <field name="x_carne"/>
                             <field name="x_curso_otro"/>
                             <field name="x_whatsapp"/>
                             <field name="x_jornada"/>

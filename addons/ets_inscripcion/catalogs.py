@@ -3,17 +3,21 @@
 TCU_1ER = 'Técnico Universitario (1er. año Carrera Técnica)'
 TCU_2DO = 'Técnico Universitario (2do. año Carrera Técnica)'
 TCU_3ER = 'Técnico Universitario (3er. año) AÑO ACADÉMICO'
-TCU_EGR = 'Egresado del Centro Educativo'
-TCU_EST = 'Estudiante del Centro Educativo'
 TCU_NO = 'NO'
 OTRO = 'Otras'
+VINCULO_EGRESADO = 'egresado'
+VINCULO_ESTUDIANTE = 'estudiante'
+VINCULO_NINGUNO = 'ninguno'
+VINCULOS = [
+    (VINCULO_EGRESADO, 'Egresado del Centro Educativo'),
+    (VINCULO_ESTUDIANTE, 'Estudiante actual del Centro Educativo'),
+    (VINCULO_NINGUNO, 'Ninguno de los anteriores'),
+]
 
 TCU_ETS = [
     (TCU_1ER, 'Técnico Superior Universitario (1er. año)'),
     (TCU_2DO, 'Técnico Superior Universitario (2do. año)'),
     (TCU_3ER, 'Técnico Superior Universitario (3er. año) AÑO ACADÉMICO'),
-    (TCU_EGR, 'Egresado del Centro Educativo'),
-    (TCU_EST, 'Estudiante del Centro Educativo'),
     (TCU_NO, 'No'),
 ]
 TCU_TIC = list(TCU_ETS)
@@ -106,16 +110,12 @@ COURSES_BY_TCU = {
         TCU_1ER: CARRERAS_ETS_1ER,
         TCU_2DO: CARRERAS_ETS_2DO,
         TCU_NO: CARRERAS_ETS_LIBRE,
-        TCU_EGR: CARRERAS_ETS_LIBRE,
-        TCU_EST: CARRERAS_ETS_LIBRE,
         TCU_3ER: [],
     },
     'tic': {
         TCU_1ER: CARRERAS_TIC_1ER,
         TCU_2DO: CARRERAS_TIC_2DO,
         TCU_NO: CARRERAS_TIC_LIBRE,
-        TCU_EGR: CARRERAS_TIC_LIBRE,
-        TCU_EST: CARRERAS_TIC_LIBRE,
         TCU_3ER: [],
     },
 }

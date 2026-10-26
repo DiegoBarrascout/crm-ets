@@ -49,13 +49,18 @@ class EtsInscripcion(http.Controller):
         tcu = kwargs.get('x_CarreraISTMO') or ''
         carrera = kwargs.get('x_CarreraTecnica') or ''
         trabajador = kwargs.get('x_trabajadorQueAtendio') or ''
+        vinculo = kwargs.get('vinculo_centro') or ''
+        carne = ''.join(c for c in (kwargs.get('carne') or '') if c.isalnum())
         curso_otro = (kwargs.get('curso_otro') or '').strip() if carrera == catalogs.OTRO else ''
         cursos_ok = catalogs.courses_for(area, tcu)
+        pide_carne = vinculo in (catalogs.VINCULO_EGRESADO, catalogs.VINCULO_ESTUDIANTE)
 
         if (
             not nombre
             or not email
             or len(telefono) != 8
+            or vinculo not in (catalogs.VINCULO_EGRESADO, catalogs.VINCULO_ESTUDIANTE, catalogs.VINCULO_NINGUNO)
+            or (pide_carne and not carne)
             or not catalogs.value_allowed(cat['tcu'], tcu)
             or not catalogs.value_allowed(cat['trabajadores'], trabajador)
         ):
@@ -74,7 +79,10 @@ class EtsInscripcion(http.Controller):
             'phone': telefono,
             'type': 'opportunity',
             'x_area': area,
+            'x_vinculo_centro': vinculo,
         }
+        if pide_carne:
+            vals['x_carne'] = carne
         if curso_otro:
             vals['x_curso_otro'] = curso_otro
         stage_id = self._stage_id(area)
