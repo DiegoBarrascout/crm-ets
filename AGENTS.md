@@ -17,7 +17,9 @@ Este repositorio es un **addon custom de Odoo 18**, no un proyecto Node/Python g
 
 ## Flujo que no debes romper
 
-Lead CRM → `x_token` UUID en `create` → correo con `?token=` → GET `/carreras-tecnicas` → POST `/carreras-tecnicas/submit` → `x_formulario_completo=True` → redirect `/contactus-thank-you`.
+GET `/formulario-principal` (modal ETS/TIC) → POST crea `crm.lead` con `x_area` y etapa Nuevo o Nuevo TIC → `x_token` → correo con `?token=` → GET `/carreras-tecnicas` → POST `/carreras-tecnicas/submit` → `x_formulario_completo=True`.
+
+Catálogos: `catalogs.py`. Nombre Completo es común. TIC cambia curso técnico y trabajadores. No exigir el bloque extra TCU ISTMO (`carrera_tcu` / especialidad) si `x_area == tic`.
 
 Campos Studio ajenos a este repo, leídos por QWeb/correo:
 

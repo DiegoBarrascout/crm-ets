@@ -1,6 +1,6 @@
 ---
 name: ets-inscripcion-form
-description: Change the public ETS enrollment wizard, token lookup, POST mapping, client validations, or the inscription mail template. Use when editing /carreras-tecnicas, inscripcion_templates.xml, mail_templates.xml, x_token, CUI, DPI, TCU, or crm.lead inscription fields.
+description: Change the public ETS/TIC enrollment forms, token lookup, POST mapping, catalogs, stages, or the inscription mail template. Use when editing /formulario-principal, /carreras-tecnicas, catalogs.py, x_area, Nuevo TIC, CUI, DPI, TCU, or crm.lead inscription fields.
 ---
 
 # Formulario de inscripción ETS
@@ -13,8 +13,9 @@ Cualquier campo nuevo exige los tres (o cuatro) sitios:
 |-------|---------|
 | Modelo | `addons/ets_inscripcion/models/crm_lead.py` |
 | CRM | `views/crm_lead_views.xml` si debe verse en backend |
-| Form QWeb + JS | `views/inscripcion_templates.xml` |
-| Persistencia | `controllers/main.py` → dict `vals` |
+| Form 1 | `views/formulario_principal.xml` + `catalogs.py` |
+| Form 2 QWeb + JS | `views/inscripcion_templates.xml` |
+| Persistencia | `controllers/main.py` |
 
 Olvidar el controller deja el dato en el POST y no en el lead.
 
@@ -44,9 +45,15 @@ Además de `x_*`, el submit puede:
 - `x_acepta_condiciones` = checkbox presente
 - `x_fecha_inscripcion` parseada con `date.fromisoformat`; futuras → hoy
 
-## Studio (solo lectura en QWeb)
+## Área y etapas
 
-`x_trabajadorQueAtendio`, `x_CarreraISTMO`, `x_CarreraTecnica`. TCU extra se muestra si `x_CarreraISTMO` tiene valor distinto de `NO`.
+- `x_area`: `ets` \| `tic`. Etapa al crear: Nuevo (`crm.stage_lead1`) o Nuevo TIC (`ets_inscripcion.stage_nuevo_tic`).
+- Catálogos: `catalogs.py`. Nombre Completo unificado. TIC: `TCU_TIC = TCU_ETS`; `CARRERAS_TIC` y `TRABAJADORES_TIC` distintos.
+- TCU extra ISTMO (`carrera_tcu`) solo si `exige_tcu` (área ETS y `x_CarreraISTMO` ≠ `NO`). El TCU sí se muestra en ambos.
+
+## Studio (el primer form ya los escribe)
+
+`x_trabajadorQueAtendio`, `x_CarreraISTMO`, `x_CarreraTecnica`. No redefinirlos en Python (conflicto con Studio). Escribir solo si existen en `_fields`.
 
 ## Tras el cambio
 

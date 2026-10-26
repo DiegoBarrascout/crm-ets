@@ -4,12 +4,12 @@ Repositorio de addons personalizados de **Odoo 18** para el CRM de la Escuela T�
 
 ## Flujo de negocio
 
-1. Admisiones crea o recibe un lead en CRM (nombre, correo, teléfono, carrera).
-2. Al crear el lead, el módulo genera un `x_token` (UUID).
+1. El interesado entra a `/formulario-principal`, elige ETS o TIC en el modal y envía datos personales/carrera.
+2. Se crea el lead (`x_area`, etapa **Nuevo** o **Nuevo TIC**) y un `x_token` UUID.
 3. Se envía el correo `mail_template_inscripcion` con el enlace `/carreras-tecnicas?token=<x_token>`.
-4. El interesado completa el formulario en 4 pasos (datos personales, información adicional, laborales/facturación, condiciones).
+4. Completa el segundo formulario en 4 pasos. TIC muestra curso técnico y trabajadores TIC; el bloque extra TCU ISTMO solo aplica a ETS.
 5. El POST `/carreras-tecnicas/submit` actualiza el mismo lead y marca `x_formulario_completo`.
-6. El usuario es redirigido a `/contactus-thank-you`.
+6. Redirect a `/contactus-thank-you`.
 
 Campos de Studio que **no** define este addon pero el formulario y el correo sí leen: `x_trabajadorQueAtendio`, `x_CarreraISTMO`, `x_CarreraTecnica`. No los elimines ni los renombres sin actualizar plantillas.
 
@@ -43,7 +43,9 @@ Tras cambios en Python o XML: actualizar el módulo (`-u ets_inscripcion`) y rec
 
 | Ruta | Auth | Método | Rol |
 |------|------|--------|-----|
-| `/carreras-tecnicas` | public | GET | Renderiza el formulario. Token inválido → 404. Sin token → formulario vacío (el submit no persiste). |
+| `/formulario-principal` | public | GET | Modal ETS/TIC y formulario inicial. `?area=ets` o `?area=tic` omite el modal. |
+| `/formulario-principal/submit` | public | POST + CSRF | Crea el lead (`x_area`, etapa, token). Catálogo inválido → redirect. |
+| `/carreras-tecnicas` | public | GET | Segundo formulario. Token inválido → 404. Sin token → formulario vacío (el submit no persiste). |
 | `/carreras-tecnicas/submit` | public | POST + CSRF | Escribe el lead identificado por `token`. |
 
 El controlador usa `sudo()` porque es un flujo público. Cualquier campo nuevo que se escriba desde el POST debe validarse (longitud, catálogo, fecha no futura).

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="formulario_principal" name="Formulario Principal ETS/TIC">
+        <t t-call="website.layout">
+            <div class="container mt-4 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h1 class="text-center mb-3" style="color:#008f8c;">
+                            <t t-if="area">
+                                <t t-esc="cat['titulo']"/>
+                            </t>
+                            <t t-else="">Datos Personales</t>
+                        </h1>
+                        <p class="text-center text-muted">
+                            Área:
+                            <t t-if="area == 'tic'">TIC</t>
+                            <t t-elif="area == 'ets'">ETS</t>
+                            <t t-else="">elige ETS o TIC para continuar</t>
+                            <t t-if="area">
+                                · <a href="/formulario-principal" class="link-secondary">cambiar área</a>
+                            </t>
+                        </p>
+
+                        <form t-att-class="'d-none' if not area else ''"
+                              action="/formulario-principal/submit"
+                              method="post"
+                              id="form-principal"
+                              t-if="area">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="area" t-att-value="area"/>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nombre Completo *</label>
+                                <input type="text" name="name" class="form-control" required="1"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono *</label>
+                                <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1"/>
+                                <small class="text-muted">8 dígitos, sin guiones ni espacios.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Correo electrónico *</label>
+                                <input type="email" name="email_from" class="form-control" required="1"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Técnico Universitario *</label>
+                                <select name="x_CarreraISTMO" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <t t-foreach="cat['tcu']" t-as="opt">
+                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><t t-esc="cat['label_carrera']"/> *</label>
+                                <select name="x_CarreraTecnica" id="carrera_principal" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <t t-foreach="cat['carreras']" t-as="opt">
+                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="mb-3 d-none" id="campo_curso_otro">
+                                <label class="form-label">Especifique el curso *</label>
+                                <input type="text" name="curso_otro" id="curso_otro" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Trabajador que lo atendió *</label>
+                                <select name="x_trabajadorQueAtendio" class="form-select" required="1">
+                                    <option value="">Seleccione...</option>
+                                    <t t-foreach="cat['trabajadores']" t-as="opt">
+                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="text-end">
+                                <t t-if="cat['catalogo_listo']">
+                                    <button type="submit" class="btn btn-primary btn-lg">Enviar</button>
+                                </t>
+                                <t t-else="">
+                                    <button type="button" class="btn btn-secondary btn-lg" disabled="disabled">Enviar</button>
+                                </t>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal-area" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">Área de interés</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>Selecciona el área para mostrar el formulario correspondiente.</p>
+                            <div class="d-grid gap-2">
+                                <a href="/formulario-principal?area=ets" class="btn btn-lg text-white" style="background:#008f8c;">ETS — Escuela Técnica Superior</a>
+                                <a href="/formulario-principal?area=tic" class="btn btn-lg btn-outline-secondary">TIC</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var area = <t t-if="area">true</t><t t-else="">false</t>;
+                    if (!area) {
+                        var el = document.getElementById('modal-area');
+                        if (el &amp;&amp; window.bootstrap) {
+                            new bootstrap.Modal(el).show();
+                        } else if (el) {
+                            el.classList.add('show');
+                            el.style.display = 'block';
+                        }
+                    }
+                    var phone = document.getElementById('phone');
+                    if (phone) {
+                        phone.addEventListener('input', function () {
+                            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                        });
+                    }
+                    var carrera = document.getElementById('carrera_principal');
+                    var otro = document.getElementById('campo_curso_otro');
+                    if (carrera &amp;&amp; otro) {
+                        var toggleOtro = function () {
+                            otro.classList.toggle('d-none', carrera.value !== 'Otras');
+                        };
+                        carrera.addEventListener('change', toggleOtro);
+                        toggleOtro();
+                    }
+                });
+            </script>
+        </t>
+    </template>
+</odoo>
