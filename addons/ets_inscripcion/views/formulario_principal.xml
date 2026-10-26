@@ -2,7 +2,7 @@
 <odoo>
     <template id="formulario_principal" name="Formulario Principal ETS/TIC">
         <t t-call="website.layout">
-            <div class="container mt-4 mb-5">
+            <div class="container d-flex flex-column justify-content-center py-4" style="min-height:calc(100vh - 12rem);">
                 <t t-if="area">
                     <form action="/formulario-principal/submit" method="post" id="form-principal">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
