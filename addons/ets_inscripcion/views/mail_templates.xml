@@ -34,7 +34,7 @@
                         <tr>
                             <td align="center" style="padding:25px 0;background-color:#f4f6f9;">
                                 <a t-att-href="'http://crm-ets.kinal.edu.gt:8069/carreras-tecnicas?token=' + (object.x_token or '')"
-                                   style="background-color:#008f8c;color:#ffffff;text-decoration:none;padding:14px 28px;font-size:16px;border-radius:5px;display:inline-block;font-weight:bold;">
+                                   style="background-color:#195190;color:#ffffff;text-decoration:none;padding:14px 28px;font-size:16px;border-radius:5px;display:inline-block;font-weight:bold;">
                                     Completar Proceso de Inscripción
                                 </a>
                             </td>
