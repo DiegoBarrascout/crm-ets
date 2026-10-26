@@ -106,15 +106,24 @@ class EtsInscripcion(http.Controller):
                 return request.render('website.404')
 
         area = lead.x_area if lead and lead.x_area else 'ets'
+        cat = catalogs.for_area(area)
         tcu_val = ''
+        carrera_val = ''
         if lead and 'x_CarreraISTMO' in lead._fields:
             tcu_val = lead.x_CarreraISTMO or ''
-        exige_tcu = area != 'tic' and bool(tcu_val) and tcu_val != 'NO'
+        if lead and 'x_CarreraTecnica' in lead._fields:
+            carrera_val = lead.x_CarreraTecnica or ''
 
         return request.render('ets_inscripcion.formulario_inscripcion', {
             'lead': lead,
             'es_tic': area == 'tic',
-            'exige_tcu': exige_tcu,
+            'cat': cat,
+            'tcu_val': tcu_val,
+            'carrera_val': carrera_val,
+            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()})),
+            'tcu_disable_json': Markup(json.dumps(cat['tcu_disable'])),
+            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'])),
+            'municipios_json': Markup(json.dumps(catalogs.MUNICIPIOS_GT, ensure_ascii=False)),
         })
 
     @http.route('/carreras-tecnicas/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
@@ -140,10 +149,20 @@ class EtsInscripcion(http.Controller):
 
         nombre_alumno = kwargs.get('nombre_alumno', '').strip()
 
+        jornada = kwargs.get('jornada')
+        if jornada not in {v for v, _l in catalogs.JORNADAS}:
+            jornada = False
+
+        departamento = (kwargs.get('departamento') or '').strip()
+        municipio = (kwargs.get('municipio') or '').strip()
+        if not catalogs.geo_ok(departamento, municipio):
+            departamento = False
+            municipio = False
+
         vals = {
             'x_cui': kwargs.get('cui'),
             'x_whatsapp': kwargs.get('whatsapp'),
-            'x_jornada': kwargs.get('jornada'),
+            'x_jornada': jornada,
             'x_fecha_inscripcion': fecha,
             'x_edad_numero': int(kwargs.get('edad_numero') or 0),
             'x_edad': kwargs.get('edad'),
@@ -151,8 +170,8 @@ class EtsInscripcion(http.Controller):
             'x_alumno': kwargs.get('alumno'),
             'x_carne': kwargs.get('carne'),
             'x_direccion_vivienda': kwargs.get('direccion_vivienda'),
-            'x_departamento': kwargs.get('departamento'),
-            'x_municipio': kwargs.get('municipio'),
+            'x_departamento': departamento,
+            'x_municipio': municipio,
             'x_como_se_entero': kwargs.get('como_se_entero'),
             'x_nombre_recomendante': kwargs.get('nombre_recomendante'),
             'x_parentesco': kwargs.get('parentesco'),
@@ -167,13 +186,27 @@ class EtsInscripcion(http.Controller):
             'x_posee_vehiculo': kwargs.get('posee_vehiculo'),
             'x_tipo_vehiculo': kwargs.get('tipo_vehiculo'),
             'x_placa_vehiculo': kwargs.get('placa_vehiculo'),
-            'x_carrera_tcu': kwargs.get('carrera_tcu'),
-            'x_especialidad_tcu': kwargs.get('especialidad_tcu'),
             'x_nombre_alumno': nombre_alumno,
             'x_dpi': kwargs.get('dpi'),
             'x_acepta_condiciones': True if kwargs.get('acepta_condiciones') else False,
             'x_formulario_completo': True,
         }
+
+        area = lead.x_area if lead.x_area else 'ets'
+        cat = catalogs.for_area(area)
+        tcu = kwargs.get('x_CarreraISTMO') or ''
+        carrera = kwargs.get('x_CarreraTecnica') or ''
+        curso_otro = (kwargs.get('curso_otro') or '').strip() if carrera == catalogs.OTRO else ''
+        cursos_ok = catalogs.courses_for(area, tcu)
+        if catalogs.value_allowed(cat['tcu'], tcu):
+            _studio_write(vals, 'x_CarreraISTMO', tcu)
+            if catalogs.carrera_disabled(tcu):
+                vals['x_curso_otro'] = False
+                if 'x_CarreraTecnica' in request.env['crm.lead']._fields:
+                    vals['x_CarreraTecnica'] = False
+            elif catalogs.value_allowed(cursos_ok, carrera):
+                _studio_write(vals, 'x_CarreraTecnica', carrera)
+                vals['x_curso_otro'] = curso_otro or False
 
         telefono = kwargs.get('telefono', '').strip()
         if telefono:

@@ -40,7 +40,6 @@
                         <form action="/carreras-tecnicas/submit" method="post" id="inscripcion-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="token" t-att-value="lead.x_token if lead else ''"/>
-                            <input type="hidden" id="exige_tcu" t-att-value="'1' if exige_tcu else '0'"/>
 
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
@@ -88,55 +87,26 @@
                                     <input type="text" class="form-control bg-light" t-att-value="lead.x_trabajadorQueAtendio or ''" readonly="1"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Técnico Superior Universitario</label>
-                                    <input type="text" class="form-control bg-light" id="tcu_valor" t-att-value="lead.x_CarreraISTMO or ''" readonly="1"/>
-                                </div>
-                                <div class="mb-3 d-none" id="campo_carrera_tcu">
-                                    <label class="form-label">Carrera Técnica Universitaria *</label>
-                                    <select name="carrera_tcu" id="carrera_tcu" class="form-select">
+                                    <label class="form-label"><t t-esc="cat['label_tsu']"/></label>
+                                    <select name="x_CarreraISTMO" id="tcu_confirm" class="form-select">
                                         <option value="">Seleccione...</option>
-                                        <option value="Construcción">Construcción</option>
-                                        <option value="Desarrollo de Aplicaciones Empresariales">Desarrollo de Aplicaciones Empresariales</option>
-                                        <option value="Electricidad Industrial">Electricidad Industrial</option>
-                                        <option value="Electrónica Industrial">Electrónica Industrial</option>
-                                        <option value="Mecánica Automotriz">Mecánica Automotriz</option>
-                                        <option value="Mecánica Industrial">Mecánica Industrial</option>
-                                        <option value="Telecomunicaciones">Telecomunicaciones</option>
+                                        <t t-foreach="cat['tcu']" t-as="opt">
+                                            <option t-att-value="opt[0]" t-att-selected="opt[0] == tcu_val"><t t-esc="opt[1]"/></option>
+                                        </t>
                                     </select>
+                                    <small class="text-muted">Confirme o cambie si es necesario.</small>
                                 </div>
-                                <div class="mb-3 d-none" id="campo_especialidad">
-                                    <label class="form-label">Especialidad *</label>
-                                    <select name="especialidad_tcu" id="especialidad_tcu" class="form-select">
+                                <div class="mb-3">
+                                    <label class="form-label"><t t-esc="cat['label_carrera']"/></label>
+                                    <select name="x_CarreraTecnica" id="carrera_confirm" class="form-select" t-att-data-inicial="carrera_val">
                                         <option value="">Seleccione...</option>
-                                        <option value="Mecánica de Motores">Mecánica de Motores</option>
-                                        <option value="Electromecánica Automotriz">Electromecánica Automotriz</option>
-                                        <option value="Inyección Electrónica Automotriz">Inyección Electrónica Automotriz</option>
-                                        <option value="Controles y Maquinas Eléctricas Generales">Controles y Maquinas Eléctricas Generales</option>
-                                        <option value="Automatización Industrial">Automatización Industrial</option>
-                                        <option value="Control Industrial con Sistemas Programables">Control Industrial con Sistemas Programables</option>
-                                        <option value="AutoCAD 2D &amp; 3D (Certificado Autodesk)">AutoCAD 2D &amp; 3D (Certificado Autodesk)</option>
-                                        <option value="Revit Architecture (Certificado Autodesk)">Revit Architecture (Certificado Autodesk)</option>
-                                        <option value="CCNP">CCNP</option>
-                                        <option value="CCNA">CCNA</option>
-                                        <option value="Fullstack Asp. NET">Fullstack Asp. NET</option>
-                                        <option value="Fullstack JAVA">Fullstack JAVA</option>
                                     </select>
+                                    <small id="nota_carrera_confirm" class="text-muted d-none"></small>
                                 </div>
-                                <t t-if="lead and lead.x_CarreraTecnica">
-                                <div class="mb-3">
-                                    <label class="form-label">
-                                        <t t-if="es_tic">Curso Técnico</t>
-                                        <t t-else="">Carrera Técnica</t>
-                                    </label>
-                                    <input type="text" class="form-control bg-light" t-att-value="lead.x_CarreraTecnica or ''" readonly="1"/>
+                                <div class="mb-3 d-none" id="campo_curso_otro_confirm">
+                                    <label class="form-label">Especifique el curso *</label>
+                                    <input type="text" name="curso_otro" id="curso_otro_confirm" class="form-control" t-att-value="lead.x_curso_otro if lead else ''"/>
                                 </div>
-                                </t>
-                                <t t-if="es_tic and lead and lead.x_curso_otro">
-                                <div class="mb-3">
-                                    <label class="form-label">Otro curso técnico</label>
-                                    <input type="text" class="form-control bg-light" t-att-value="lead.x_curso_otro or ''" readonly="1"/>
-                                </div>
-                                </t>
                                 <div class="mb-3">
                                     <label class="form-label">Jornada *</label>
                                     <div>
@@ -144,6 +114,9 @@
                                     </div>
                                     <div>
                                         <input type="radio" name="jornada" value="vespertina"/> Vespertina - sábados (13:00 a 17:30)
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="jornada" value="entre_semana"/> Entre semana (noches, 1 o 2 días)
                                     </div>
                                 </div>
                                 <div class="text-end">
@@ -190,11 +163,15 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Departamento Regional *</label>
-                                    <input type="text" name="departamento" class="form-control"/>
+                                    <select name="departamento" id="departamento" class="form-select">
+                                        <option value="">Seleccione...</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Municipio Regional *</label>
-                                    <input type="text" name="municipio" class="form-control"/>
+                                    <select name="municipio" id="municipio" class="form-select" disabled="disabled">
+                                        <option value="">Seleccione primero el departamento...</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">¿Cómo se enteró de Kinal? *</label>
@@ -328,10 +305,20 @@
                 </div>
             </div>
 
+            <script type="application/json" id="ets-courses-json"><t t-out="courses_json or '{}'"/></script>
+            <script type="application/json" id="ets-tcu-disable-json"><t t-out="tcu_disable_json or '[]'"/></script>
+            <script type="application/json" id="ets-tcu-notes-json"><t t-out="tcu_notes_json or '{}'"/></script>
+            <script type="application/json" id="ets-municipios-json"><t t-out="municipios_json or '{}'"/></script>
             <script>
                 function sanitize(val) {
                     if (!val) return '';
                     return val.replace(/[&lt;&gt;"'`;]/g, '');
+                }
+
+                function parseJson(id, fallback) {
+                    var node = document.getElementById(id);
+                    if (!node) return fallback;
+                    try { return JSON.parse(node.textContent); } catch (e) { return fallback; }
                 }
 
                 document.addEventListener('DOMContentLoaded', function() {
@@ -340,23 +327,87 @@
                     var fechaInp = document.getElementById('fecha_inscripcion');
                     if (fechaInp) fechaInp.setAttribute('max', today);
 
-                    // Mostrar carrera TCU si aplica
-                    var exigeTcu = document.getElementById('exige_tcu');
-                    var tcuVal = document.getElementById('tcu_valor');
-                    if (exigeTcu &amp;&amp; exigeTcu.value === '1' &amp;&amp; tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
-                        document.getElementById('campo_carrera_tcu').classList.remove('d-none');
+                    var coursesByTcu = parseJson('ets-courses-json', {});
+                    var tcuDisable = parseJson('ets-tcu-disable-json', []);
+                    var tcuNotes = parseJson('ets-tcu-notes-json', {});
+                    var tcuSel = document.getElementById('tcu_confirm');
+                    var carrera = document.getElementById('carrera_confirm');
+                    var otroWrap = document.getElementById('campo_curso_otro_confirm');
+                    var nota = document.getElementById('nota_carrera_confirm');
+                    var carreraInicial = carrera ? (carrera.getAttribute('data-inicial') || '') : '';
+
+                    function fillCarreras(tcu, keepInicial) {
+                        if (!carrera) return;
+                        carrera.innerHTML = '';
+                        var disabled = !tcu || tcuDisable.indexOf(tcu) !== -1;
+                        var opts = coursesByTcu[tcu] || [];
+                        var first = document.createElement('option');
+                        first.value = '';
+                        if (disabled) {
+                            first.textContent = tcu ? 'No aplica para año académico' : 'Seleccione primero el TSU...';
+                            carrera.appendChild(first);
+                            carrera.disabled = true;
+                            carrera.value = '';
+                        } else {
+                            first.textContent = 'Seleccione...';
+                            carrera.appendChild(first);
+                            opts.forEach(function (pair) {
+                                var o = document.createElement('option');
+                                o.value = pair[0];
+                                o.textContent = pair[1];
+                                carrera.appendChild(o);
+                            });
+                            carrera.disabled = false;
+                            if (keepInicial &amp;&amp; carreraInicial) carrera.value = carreraInicial;
+                        }
+                        if (nota) {
+                            var msg = tcuNotes[tcu] || '';
+                            nota.textContent = msg;
+                            nota.classList.toggle('d-none', !msg);
+                        }
+                        if (otroWrap) {
+                            otroWrap.classList.toggle('d-none', carrera.value !== 'Otras');
+                        }
                     }
 
-                    // Carrera TCU muestra especialidad
-                    var carreraTcu = document.getElementById('carrera_tcu');
-                    if (carreraTcu) {
-                        carreraTcu.addEventListener('change', function() {
-                            var esp = document.getElementById('campo_especialidad');
-                            if (this.value) {
-                                esp.classList.remove('d-none');
-                            } else {
-                                esp.classList.add('d-none');
+                    if (tcuSel &amp;&amp; carrera) {
+                        tcuSel.addEventListener('change', function () { fillCarreras(this.value, false); });
+                        fillCarreras(tcuSel.value, true);
+                        carrera.addEventListener('change', function () {
+                            if (otroWrap) otroWrap.classList.toggle('d-none', this.value !== 'Otras');
+                        });
+                    }
+
+                    var munByDept = parseJson('ets-municipios-json', {});
+                    var deptSel = document.getElementById('departamento');
+                    var munSel = document.getElementById('municipio');
+                    if (deptSel &amp;&amp; munSel) {
+                        Object.keys(munByDept).sort().forEach(function (dept) {
+                            var o = document.createElement('option');
+                            o.value = dept;
+                            o.textContent = dept;
+                            deptSel.appendChild(o);
+                        });
+                        deptSel.addEventListener('change', function () {
+                            var list = munByDept[this.value] || [];
+                            munSel.innerHTML = '';
+                            var first = document.createElement('option');
+                            first.value = '';
+                            if (!this.value) {
+                                first.textContent = 'Seleccione primero el departamento...';
+                                munSel.appendChild(first);
+                                munSel.disabled = true;
+                                return;
                             }
+                            first.textContent = 'Seleccione...';
+                            munSel.appendChild(first);
+                            list.forEach(function (name) {
+                                var o = document.createElement('option');
+                                o.value = name;
+                                o.textContent = name;
+                                munSel.appendChild(o);
+                            });
+                            munSel.disabled = false;
                         });
                     }
 
@@ -442,13 +493,17 @@
                         if (!whatsapp) { alert('Por favor indique si tiene WhatsApp.'); return; }
                         var jornada = document.querySelector('input[name=jornada]:checked');
                         if (!jornada) { alert('Por favor seleccione una jornada.'); return; }
-                        var exigeTcu = document.getElementById('exige_tcu');
-                        var tcuVal = document.getElementById('tcu_valor');
-                        if (exigeTcu &amp;&amp; exigeTcu.value === '1' &amp;&amp; tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
-                            var carreraTcu = document.getElementById('carrera_tcu');
-                            if (!carreraTcu.value) { alert('Por favor seleccione la carrera TCU.'); return; }
-                            var espTcu = document.getElementById('especialidad_tcu');
-                            if (!espTcu.value) { alert('Por favor seleccione la especialidad.'); return; }
+                        var tcuSel = document.getElementById('tcu_confirm');
+                        if (!tcuSel || !tcuSel.value) { alert('Por favor confirme el Técnico Superior Universitario.'); return; }
+                        var carreraSel = document.getElementById('carrera_confirm');
+                        var tcuDisable = parseJson('ets-tcu-disable-json', []);
+                        var tcuAnioAcad = tcuDisable.indexOf(tcuSel.value) !== -1;
+                        if (!tcuAnioAcad) {
+                            if (!carreraSel || !carreraSel.value) { alert('Por favor confirme el curso o carrera técnica.'); return; }
+                            if (carreraSel.value === 'Otras') {
+                                var otro = document.getElementById('curso_otro_confirm');
+                                if (!otro || !otro.value.trim()) { alert('Por favor especifique el curso.'); return; }
+                            }
                         }
                     }
                     if (current === 2) {
@@ -459,10 +514,10 @@
                         if (!genero) { alert('Por favor seleccione su género.'); return; }
                         var alumno = document.querySelector('input[name=alumno]:checked');
                         if (!alumno) { alert('Por favor seleccione si es primer ingreso o reingreso.'); return; }
-                        var dpto = document.querySelector('input[name=departamento]');
-                        if (!dpto.value.trim()) { alert('Por favor ingrese su departamento.'); return; }
-                        var mun = document.querySelector('input[name=municipio]');
-                        if (!mun.value.trim()) { alert('Por favor ingrese su municipio.'); return; }
+                        var dpto = document.getElementById('departamento');
+                        if (!dpto || !dpto.value) { alert('Por favor seleccione su departamento.'); return; }
+                        var mun = document.getElementById('municipio');
+                        if (!mun || !mun.value) { alert('Por favor seleccione su municipio.'); return; }
                         var entero = document.querySelector('select[name=como_se_entero]');
                         if (!entero.value) { alert('Por favor indique cómo se enteró de Kinal.'); return; }
                         var grado = document.querySelector('input[name=ultimo_grado]');

@@ -1,7 +1,15 @@
 """Catálogos del formulario principal. Values = lo que se guarda en el lead."""
 
+from .guatemala import MUNICIPIOS_GT, geo_ok  # noqa: F401
+
 # Azul de btn-primary / Contáctanos en el sitio (no el aqua anterior #008f8c).
 COLOR_PRIMARY = '#195190'
+
+JORNADAS = [
+    ('matutina', 'Matutina - sábados (08:00 a 12:30)'),
+    ('vespertina', 'Vespertina - sábados (13:00 a 17:30)'),
+    ('entre_semana', 'Entre semana (noches, 1 o 2 días)'),
+]
 
 TCU_1ER = 'Técnico Universitario (1er. año Carrera Técnica)'
 TCU_2DO = 'Técnico Universitario (2do. año Carrera Técnica)'
