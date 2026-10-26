@@ -45,10 +45,22 @@
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 1: Datos Personales</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Nombre Completo</label>
-                                    <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
-                                </div>
+                                <t t-if="es_tic">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombres</label>
+                                        <input type="text" class="form-control bg-light" t-att-value="lead.x_nombres or ''" readonly="1"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apellidos</label>
+                                        <input type="text" class="form-control bg-light" t-att-value="lead.x_apellidos or ''" readonly="1"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre Completo</label>
+                                        <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
+                                    </div>
+                                </t>
                                 <div class="mb-3">
                                     <label class="form-label">Correo electrónico</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.email_from or ''" readonly="1"/>
@@ -109,10 +121,19 @@
                                         <option value="Fullstack JAVA">Fullstack JAVA</option>
                                     </select>
                                 </div>
-                                <t t-if="lead.x_CarreraTecnica">
+                                <t t-if="lead and lead.x_CarreraTecnica">
                                 <div class="mb-3">
-                                    <label class="form-label">Carrera Técnica</label>
+                                    <label class="form-label">
+                                        <t t-if="es_tic">Curso Técnico</t>
+                                        <t t-else="">Carrera Técnica</t>
+                                    </label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.x_CarreraTecnica or ''" readonly="1"/>
+                                </div>
+                                </t>
+                                <t t-if="es_tic and lead and lead.x_curso_otro">
+                                <div class="mb-3">
+                                    <label class="form-label">Otro curso técnico</label>
+                                    <input type="text" class="form-control bg-light" t-att-value="lead.x_curso_otro or ''" readonly="1"/>
                                 </div>
                                 </t>
                                 <div class="mb-3">

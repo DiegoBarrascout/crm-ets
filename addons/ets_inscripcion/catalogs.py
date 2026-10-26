@@ -1,6 +1,6 @@
-"""Catálogos del formulario principal. Valores = claves Studio (dump producción).
+"""Catálogos del formulario principal.
 
-TIC: listas vacías a propósito hasta que Admisiones entregue opciones.
+ETS: valores Studio (dump). TIC: mismo TCU; curso técnico y trabajadores del form actual.
 """
 
 # (value, label) — value se guarda en x_CarreraISTMO / x_CarreraTecnica / x_trabajadorQueAtendio
@@ -50,10 +50,30 @@ TRABAJADORES_ETS = [
     ('Antonio Escobar', 'Antonio Escobar'),
 ]
 
-# Rellenar cuando Admisiones entregue el catálogo TIC (mismos campos, otras opciones).
-TCU_TIC = []
-CARRERAS_TIC = []
-TRABAJADORES_TIC = []
+# TCU idéntico a ETS. Curso técnico y trabajadores: formulario TIC actual (Forms).
+TCU_TIC = list(TCU_ETS)
+CARRERAS_TIC = [
+    ('Analista jr en Ciberseguridad', 'Analista jr en Ciberseguridad'),
+    ('Arquitectura y Operación de Sistemas basados en la nube (AWS)', 'Arquitectura y Operación de Sistemas basados en la nube (AWS)'),
+    ('Técnico en redes e internet CCNA', 'Técnico en redes e internet CCNA'),
+    ('Profesional en redes e internet CCNP', 'Profesional en redes e internet CCNP'),
+    ('Desarrollo Avanzado: Integración de modelos GPT y servicios de IA', 'Desarrollo Avanzado: Integración de modelos GPT y servicios de IA'),
+    ('Especialista en Gestión de Servicios IT', 'Especialista en Gestión de Servicios IT'),
+    ('Desarrollador Fullstack JAVA', 'Desarrollador Fullstack JAVA'),
+    ('Desarrollador Fullstack .NET', 'Desarrollador Fullstack .NET'),
+    ('Fundamentos base de datos SQL', 'Fundamentos base de datos SQL'),
+    ('Fundamentos de programación Java', 'Fundamentos de programación Java'),
+    ('Fundamentos de Python', 'Fundamentos de Python'),
+    ('Introducción Profesional a la Administración de Base de Datos', 'Introducción Profesional a la Administración de Base de Datos'),
+    ('IT Essentials', 'IT Essentials'),
+    ('Java Backend Essentials: Bases Solidas para el Desarrollo Fullstack', 'Java Backend Essentials: Bases Solidas para el Desarrollo Fullstack'),
+    ('Python Avanzado', 'Python Avanzado'),
+    ('Otras', 'Otras'),
+]
+TRABAJADORES_TIC = [
+    ('Rolando Escot', 'Rolando Escot'),
+    ('Pablo Ruiz', 'Pablo Ruiz'),
+]
 
 TITULOS = {
     'ets': 'Datos Personales — Escuela Técnica Superior',
@@ -69,7 +89,8 @@ def for_area(area):
             'tcu': TCU_TIC,
             'carreras': CARRERAS_TIC,
             'trabajadores': TRABAJADORES_TIC,
-            'catalogo_listo': bool(TCU_TIC and CARRERAS_TIC and TRABAJADORES_TIC),
+            'label_carrera': 'Curso Técnico',
+            'catalogo_listo': True,
         }
     return {
         'area': 'ets',
@@ -77,6 +98,7 @@ def for_area(area):
         'tcu': TCU_ETS,
         'carreras': CARRERAS_ETS,
         'trabajadores': TRABAJADORES_ETS,
+        'label_carrera': 'Carrera Técnica a la que se inscribe',
         'catalogo_listo': True,
     }
 

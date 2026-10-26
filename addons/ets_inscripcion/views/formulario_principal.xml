@@ -21,12 +21,6 @@
                             </t>
                         </p>
 
-                        <t t-if="area and not cat['catalogo_listo']">
-                            <div class="alert alert-warning">
-                                El catálogo de programas TIC aún no está cargado. El formulario se habilitará cuando Admisiones entregue las listas.
-                            </div>
-                        </t>
-
                         <form t-att-class="'d-none' if not area else ''"
                               action="/formulario-principal/submit"
                               method="post"
@@ -35,10 +29,22 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="area" t-att-value="area"/>
 
-                            <div class="mb-3">
-                                <label class="form-label">Nombre Completo *</label>
-                                <input type="text" name="name" class="form-control" required="1"/>
-                            </div>
+                            <t t-if="area == 'tic'">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombres *</label>
+                                    <input type="text" name="nombres" class="form-control" required="1"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Apellidos *</label>
+                                    <input type="text" name="apellidos" class="form-control" required="1"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre Completo *</label>
+                                    <input type="text" name="name" class="form-control" required="1"/>
+                                </div>
+                            </t>
                             <div class="mb-3">
                                 <label class="form-label">Teléfono *</label>
                                 <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1"/>
@@ -58,13 +64,17 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Carrera Técnica a la que se inscribe *</label>
-                                <select name="x_CarreraTecnica" class="form-select" required="1">
+                                <label class="form-label"><t t-esc="cat['label_carrera']"/> *</label>
+                                <select name="x_CarreraTecnica" id="carrera_principal" class="form-select" required="1">
                                     <option value="">Seleccione...</option>
                                     <t t-foreach="cat['carreras']" t-as="opt">
                                         <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
                                     </t>
                                 </select>
+                            </div>
+                            <div class="mb-3 d-none" id="campo_curso_otro">
+                                <label class="form-label">Especifique el curso *</label>
+                                <input type="text" name="curso_otro" id="curso_otro" class="form-control"/>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Trabajador que lo atendió *</label>
@@ -122,6 +132,15 @@
                         phone.addEventListener('input', function () {
                             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
                         });
+                    }
+                    var carrera = document.getElementById('carrera_principal');
+                    var otro = document.getElementById('campo_curso_otro');
+                    if (carrera &amp;&amp; otro) {
+                        var toggleOtro = function () {
+                            otro.classList.toggle('d-none', carrera.value !== 'Otras');
+                        };
+                        carrera.addEventListener('change', toggleOtro);
+                        toggleOtro();
                     }
                 });
             </script>

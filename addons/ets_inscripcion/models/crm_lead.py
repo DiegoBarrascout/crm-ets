@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 import uuid
+from odoo.addons.ets_inscripcion import catalogs
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
@@ -57,10 +58,40 @@ class CrmLead(models.Model):
         string='Área de interés',
         copy=False,
     )
+    x_nombres = fields.Char(string='Nombres')
+    x_apellidos = fields.Char(string='Apellidos')
+    x_curso_otro = fields.Char(string='Otro curso técnico')
+
+    @api.model
+    def _ets_ensure_tic_selections(self):
+        """Añade valores TIC a campos Studio (selection) si ya existen."""
+        Field = self.env['ir.model.fields'].sudo()
+        Selection = self.env['ir.model.fields.selection'].sudo()
+        extras = {
+            'x_CarreraTecnica': [v for v, _l in catalogs.CARRERAS_TIC],
+            'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_TIC],
+        }
+        for fname, values in extras.items():
+            field = Field.search([('model', '=', 'crm.lead'), ('name', '=', fname)], limit=1)
+            if not field:
+                continue
+            existing = set(Selection.search([('field_id', '=', field.id)]).mapped('value'))
+            seq = 200
+            for val in values:
+                if val in existing:
+                    continue
+                Selection.create({
+                    'field_id': field.id,
+                    'value': val,
+                    'name': val,
+                    'sequence': seq,
+                })
+                seq += 1
 
     @api.model
     def _ets_after_module_update(self):
         self.env['crm.stage']._ets_apply_stage_order()
+        self._ets_ensure_tic_selections()
         pages = self.env['website.page'].sudo().search([('url', '=', '/formulario-principal')])
         if pages:
             pages.write({'is_published': False})
