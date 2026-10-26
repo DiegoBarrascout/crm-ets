@@ -71,11 +71,11 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Trabajador que lo atendió</label>
+                                    <label class="form-label">Colaborador que lo atendió</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.x_trabajadorQueAtendio or ''" readonly="1"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Técnico Universitario</label>
+                                    <label class="form-label">Técnico Superior Universitario</label>
                                     <input type="text" class="form-control bg-light" id="tcu_valor" t-att-value="lead.x_CarreraISTMO or ''" readonly="1"/>
                                 </div>
                                 <div class="mb-3 d-none" id="campo_carrera_tcu">

@@ -1,3 +1,5 @@
+import json
+from markupsafe import Markup
 from odoo import http
 from odoo.http import request
 from datetime import date
@@ -26,6 +28,9 @@ class EtsInscripcion(http.Controller):
         return request.render('ets_inscripcion.formulario_principal', {
             'area': area,
             'cat': cat,
+            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()})),
+            'tcu_disable_json': Markup(json.dumps(cat['tcu_disable'])),
+            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'])),
         })
 
     @http.route('/formulario-principal/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
@@ -44,17 +49,22 @@ class EtsInscripcion(http.Controller):
         tcu = kwargs.get('x_CarreraISTMO') or ''
         carrera = kwargs.get('x_CarreraTecnica') or ''
         trabajador = kwargs.get('x_trabajadorQueAtendio') or ''
-        curso_otro = (kwargs.get('curso_otro') or '').strip() if carrera == 'Otras' else ''
+        curso_otro = (kwargs.get('curso_otro') or '').strip() if carrera == catalogs.OTRO else ''
+        cursos_ok = catalogs.courses_for(area, tcu)
 
         if (
             not nombre
             or not email
             or len(telefono) != 8
             or not catalogs.value_allowed(cat['tcu'], tcu)
-            or not catalogs.value_allowed(cat['carreras'], carrera)
             or not catalogs.value_allowed(cat['trabajadores'], trabajador)
-            or (carrera == 'Otras' and not curso_otro)
         ):
+            return request.redirect('/formulario-principal?area=%s' % area)
+
+        if catalogs.carrera_disabled(tcu):
+            carrera = ''
+            curso_otro = ''
+        elif not catalogs.value_allowed(cursos_ok, carrera) or (carrera == catalogs.OTRO and not curso_otro):
             return request.redirect('/formulario-principal?area=%s' % area)
 
         vals = {
@@ -65,7 +75,7 @@ class EtsInscripcion(http.Controller):
             'type': 'opportunity',
             'x_area': area,
         }
-        if area == 'tic' and curso_otro:
+        if curso_otro:
             vals['x_curso_otro'] = curso_otro
         stage_id = self._stage_id(area)
         if stage_id:

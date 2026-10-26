@@ -48,7 +48,7 @@ Además de `x_*`, el submit puede:
 ## Área y etapas
 
 - `x_area`: `ets` \| `tic`. Etapa al crear: Nuevo (`crm.stage_lead1`) o Nuevo TIC (`ets_inscripcion.stage_nuevo_tic`).
-- Catálogos: `catalogs.py`. Nombre Completo unificado. TIC: `TCU_TIC = TCU_ETS`; `CARRERAS_TIC` y `TRABAJADORES_TIC` distintos.
+- Catálogos: `catalogs.py` (`COURSES_BY_TCU`). Curso deshabilitado hasta TSU; año académico no pide curso. Imágenes en `static/src/img/`. Colaborador, no Trabajador.
 - TCU extra ISTMO (`carrera_tcu`) solo si `exige_tcu` (área ETS y `x_CarreraISTMO` ≠ `NO`). El TCU sí se muestra en ambos.
 
 ## Studio (el primer form ya los escribe)

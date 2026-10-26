@@ -66,8 +66,8 @@ class CrmLead(models.Model):
         Field = self.env['ir.model.fields'].sudo()
         Selection = self.env['ir.model.fields.selection'].sudo()
         extras = {
-            'x_CarreraTecnica': [v for v, _l in catalogs.CARRERAS_TIC],
-            'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_TIC],
+            'x_CarreraTecnica': catalogs.all_course_values(),
+            'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_ETS + catalogs.TRABAJADORES_TIC],
         }
         for fname, values in extras.items():
             field = Field.search([('model', '=', 'crm.lead'), ('name', '=', fname)], limit=1)
