@@ -12,8 +12,8 @@ VINCULO_EGRESADO = 'egresado'
 VINCULO_ESTUDIANTE = 'estudiante'
 VINCULO_NINGUNO = 'ninguno'
 VINCULOS = [
-    (VINCULO_EGRESADO, 'Egresado del Centro Educativo'),
-    (VINCULO_ESTUDIANTE, 'Estudiante actual del Centro Educativo'),
+    (VINCULO_EGRESADO, 'Egresado de Fundación Kinal'),
+    (VINCULO_ESTUDIANTE, 'Estudiante actual de Fundación Kinal'),
     (VINCULO_NINGUNO, 'Ninguno de los anteriores'),
 ]
 

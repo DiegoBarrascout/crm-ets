@@ -61,11 +61,11 @@ class CrmLead(models.Model):
     x_curso_otro = fields.Char(string='Otro curso técnico')
     x_vinculo_centro = fields.Selection(
         [
-            ('egresado', 'Egresado del Centro Educativo'),
-            ('estudiante', 'Estudiante actual del Centro Educativo'),
+            ('egresado', 'Egresado de Fundación Kinal'),
+            ('estudiante', 'Estudiante actual de Fundación Kinal'),
             ('ninguno', 'Ninguno de los anteriores'),
         ],
-        string='Vínculo con el Centro Educativo',
+        string='Vínculo con Fundación Kinal',
     )
 
     @api.model
