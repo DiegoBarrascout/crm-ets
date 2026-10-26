@@ -7,7 +7,7 @@ Repositorio de addons personalizados de **Odoo 18** para el CRM de la Escuela T�
 1. El interesado entra a `/formulario-principal`, elige ETS o TIC en el modal y envía datos personales/carrera.
 2. Se crea el lead (`x_area`, etapa **Nuevo** o **Nuevo TIC**) y un `x_token` UUID.
 3. Se envía el correo `mail_template_inscripcion` con el enlace `/carreras-tecnicas?token=<x_token>`.
-4. Completa el segundo formulario en 4 pasos. TIC muestra nombres/apellidos, curso técnico y trabajadores TIC; el bloque extra TCU ISTMO solo aplica a ETS.
+4. Completa el segundo formulario en 4 pasos. TIC muestra curso técnico y trabajadores TIC; el bloque extra TCU ISTMO solo aplica a ETS.
 5. El POST `/carreras-tecnicas/submit` actualiza el mismo lead y marca `x_formulario_completo`.
 6. Redirect a `/contactus-thank-you`.
 

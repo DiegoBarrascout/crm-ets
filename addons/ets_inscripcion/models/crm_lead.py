@@ -58,8 +58,6 @@ class CrmLead(models.Model):
         string='Área de interés',
         copy=False,
     )
-    x_nombres = fields.Char(string='Nombres')
-    x_apellidos = fields.Char(string='Apellidos')
     x_curso_otro = fields.Char(string='Otro curso técnico')
 
     @api.model

@@ -38,12 +38,7 @@ class EtsInscripcion(http.Controller):
         if not cat['catalogo_listo']:
             return request.redirect('/formulario-principal?area=%s' % area)
 
-        nombres = (kwargs.get('nombres') or '').strip()
-        apellidos = (kwargs.get('apellidos') or '').strip()
-        if area == 'tic':
-            nombre = ' '.join(p for p in (nombres, apellidos) if p)
-        else:
-            nombre = (kwargs.get('name') or '').strip()
+        nombre = (kwargs.get('name') or '').strip()
         email = (kwargs.get('email_from') or '').strip()
         telefono = ''.join(c for c in (kwargs.get('phone') or '') if c.isdigit())[:8]
         tcu = kwargs.get('x_CarreraISTMO') or ''
@@ -70,11 +65,8 @@ class EtsInscripcion(http.Controller):
             'type': 'opportunity',
             'x_area': area,
         }
-        if area == 'tic':
-            vals['x_nombres'] = nombres
-            vals['x_apellidos'] = apellidos
-            if curso_otro:
-                vals['x_curso_otro'] = curso_otro
+        if area == 'tic' and curso_otro:
+            vals['x_curso_otro'] = curso_otro
         stage_id = self._stage_id(area)
         if stage_id:
             vals['stage_id'] = stage_id

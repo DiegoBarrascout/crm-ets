@@ -45,22 +45,10 @@
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
                                 <h4 class="mb-3" style="color:#008f8c;">Paso 1: Datos Personales</h4>
-                                <t t-if="es_tic">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombres</label>
-                                        <input type="text" class="form-control bg-light" t-att-value="lead.x_nombres or ''" readonly="1"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Apellidos</label>
-                                        <input type="text" class="form-control bg-light" t-att-value="lead.x_apellidos or ''" readonly="1"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre Completo</label>
-                                        <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
-                                    </div>
-                                </t>
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre Completo</label>
+                                    <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Correo electrónico</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.email_from or ''" readonly="1"/>
