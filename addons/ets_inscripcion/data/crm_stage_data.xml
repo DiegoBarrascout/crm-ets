@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stage_nuevo_tic" model="crm.stage">
+        <field name="name">Nuevo TIC</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="False"/>
+        <field name="is_won" eval="False"/>
+    </record>
+    <record id="crm.stage_lead1" model="crm.stage">
+        <field name="sequence">0</field>
+    </record>
+    <record id="crm.stage_lead2" model="crm.stage">
+        <field name="sequence">10</field>
+    </record>
+    <record id="crm.stage_lead3" model="crm.stage">
+        <field name="sequence">20</field>
+    </record>
+    <record id="crm.stage_lead4" model="crm.stage">
+        <field name="sequence">30</field>
+    </record>
+    <function model="crm.lead" name="_ets_after_module_update"/>
+</odoo>

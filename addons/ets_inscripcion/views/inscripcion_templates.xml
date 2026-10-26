@@ -3,7 +3,10 @@
     <template id="formulario_inscripcion" name="Formulario de Inscripción">
         <t t-call="website.layout">
             <div class="container mt-4 mb-4">
-                <h1 class="text-center mb-4">Formulario de Inscripción Escuela Técnica Superior Kinal</h1>
+                <h1 class="text-center mb-4">
+                    <t t-if="es_tic">Formulario de Inscripción TIC Kinal</t>
+                    <t t-else="">Formulario de Inscripción Escuela Técnica Superior Kinal</t>
+                </h1>
                 <div class="row justify-content-center">
                     <div class="col-md-8">
 
@@ -37,6 +40,7 @@
                         <form action="/carreras-tecnicas/submit" method="post" id="inscripcion-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="token" t-att-value="lead.x_token if lead else ''"/>
+                            <input type="hidden" id="exige_tcu" t-att-value="'1' if exige_tcu else '0'"/>
 
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
@@ -315,8 +319,9 @@
                     if (fechaInp) fechaInp.setAttribute('max', today);
 
                     // Mostrar carrera TCU si aplica
+                    var exigeTcu = document.getElementById('exige_tcu');
                     var tcuVal = document.getElementById('tcu_valor');
-                    if (tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
+                    if (exigeTcu &amp;&amp; exigeTcu.value === '1' &amp;&amp; tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
                         document.getElementById('campo_carrera_tcu').classList.remove('d-none');
                     }
 
@@ -415,8 +420,9 @@
                         if (!whatsapp) { alert('Por favor indique si tiene WhatsApp.'); return; }
                         var jornada = document.querySelector('input[name=jornada]:checked');
                         if (!jornada) { alert('Por favor seleccione una jornada.'); return; }
+                        var exigeTcu = document.getElementById('exige_tcu');
                         var tcuVal = document.getElementById('tcu_valor');
-                        if (tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
+                        if (exigeTcu &amp;&amp; exigeTcu.value === '1' &amp;&amp; tcuVal &amp;&amp; tcuVal.value &amp;&amp; tcuVal.value !== 'NO') {
                             var carreraTcu = document.getElementById('carrera_tcu');
                             if (!carreraTcu.value) { alert('Por favor seleccione la carrera TCU.'); return; }
                             var espTcu = document.getElementById('especialidad_tcu');

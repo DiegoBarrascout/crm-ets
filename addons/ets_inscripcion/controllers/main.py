@@ -1,8 +1,77 @@
 from odoo import http
 from odoo.http import request
 from datetime import date
+from odoo.addons.ets_inscripcion import catalogs
+
+
+def _studio_write(vals, field_name, value):
+    if field_name in request.env['crm.lead']._fields and value:
+        vals[field_name] = value
+
 
 class EtsInscripcion(http.Controller):
+
+    def _area(self, raw):
+        return 'tic' if raw == 'tic' else 'ets' if raw == 'ets' else None
+
+    def _stage_id(self, area):
+        xmlid = 'ets_inscripcion.stage_nuevo_tic' if area == 'tic' else 'crm.stage_lead1'
+        stage = request.env.ref(xmlid, raise_if_not_found=False)
+        return stage.id if stage else False
+
+    @http.route('/formulario-principal', type='http', auth='public', website=True)
+    def formulario_principal(self, **kwargs):
+        area = self._area(kwargs.get('area'))
+        cat = catalogs.for_area(area) if area else catalogs.for_area('ets')
+        return request.render('ets_inscripcion.formulario_principal', {
+            'area': area,
+            'cat': cat,
+        })
+
+    @http.route('/formulario-principal/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
+    def formulario_principal_submit(self, **kwargs):
+        area = self._area(kwargs.get('area'))
+        if not area:
+            return request.redirect('/formulario-principal')
+
+        cat = catalogs.for_area(area)
+        if not cat['catalogo_listo']:
+            return request.redirect('/formulario-principal?area=%s' % area)
+
+        nombre = (kwargs.get('name') or '').strip()
+        email = (kwargs.get('email_from') or '').strip()
+        telefono = ''.join(c for c in (kwargs.get('phone') or '') if c.isdigit())[:8]
+        tcu = kwargs.get('x_CarreraISTMO') or ''
+        carrera = kwargs.get('x_CarreraTecnica') or ''
+        trabajador = kwargs.get('x_trabajadorQueAtendio') or ''
+
+        if (
+            not nombre
+            or not email
+            or len(telefono) != 8
+            or not catalogs.value_allowed(cat['tcu'], tcu)
+            or not catalogs.value_allowed(cat['carreras'], carrera)
+            or not catalogs.value_allowed(cat['trabajadores'], trabajador)
+        ):
+            return request.redirect('/formulario-principal?area=%s' % area)
+
+        vals = {
+            'name': nombre,
+            'contact_name': nombre,
+            'email_from': email,
+            'phone': telefono,
+            'type': 'opportunity',
+            'x_area': area,
+        }
+        stage_id = self._stage_id(area)
+        if stage_id:
+            vals['stage_id'] = stage_id
+        _studio_write(vals, 'x_CarreraISTMO', tcu)
+        _studio_write(vals, 'x_CarreraTecnica', carrera)
+        _studio_write(vals, 'x_trabajadorQueAtendio', trabajador)
+
+        request.env['crm.lead'].sudo().create(vals)
+        return request.redirect('/contactus-thank-you')
 
     @http.route('/carreras-tecnicas', type='http', auth='public', website=True)
     def formulario_inscripcion(self, **kwargs):
@@ -14,8 +83,16 @@ class EtsInscripcion(http.Controller):
             if not lead:
                 return request.render('website.404')
 
+        area = lead.x_area if lead and lead.x_area else 'ets'
+        tcu_val = ''
+        if lead and 'x_CarreraISTMO' in lead._fields:
+            tcu_val = lead.x_CarreraISTMO or ''
+        exige_tcu = area != 'tic' and bool(tcu_val) and tcu_val != 'NO'
+
         return request.render('ets_inscripcion.formulario_inscripcion', {
             'lead': lead,
+            'es_tic': area == 'tic',
+            'exige_tcu': exige_tcu,
         })
 
     @http.route('/carreras-tecnicas/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
@@ -29,7 +106,6 @@ class EtsInscripcion(http.Controller):
         if not lead:
             return request.redirect('/contactus-thank-you')
 
-        # Validar fecha
         fecha_str = kwargs.get('fecha_inscripcion')
         fecha = None
         if fecha_str:
@@ -40,7 +116,6 @@ class EtsInscripcion(http.Controller):
             except ValueError:
                 fecha = date.today()
 
-        # Nombre del alumno actualiza el nombre de la oportunidad
         nombre_alumno = kwargs.get('nombre_alumno', '').strip()
 
         vals = {
@@ -78,12 +153,10 @@ class EtsInscripcion(http.Controller):
             'x_formulario_completo': True,
         }
 
-        # Actualizar teléfono si fue modificado
         telefono = kwargs.get('telefono', '').strip()
         if telefono:
             vals['phone'] = telefono
 
-        # Actualizar nombre de la oportunidad con el nombre del alumno
         if nombre_alumno:
             vals['name'] = nombre_alumno
 

@@ -7,6 +7,8 @@ alwaysApply: true
 
 Addon `ets_inscripcion` sobre `crm.lead`. Idioma de UI: español (Guatemala). Marca: color `#008f8c`. Contacto de pagos en el formulario: `Infoets@kinal.org.gt`.
 
+Primer formulario: `/formulario-principal` (modal ETS/TIC, catálogos en `catalogs.py`). Segundo: `/carreras-tecnicas`. Etapa **Nuevo TIC** entre Nuevo e Información Enviada.
+
 ## Token
 
 Cada lead tiene `x_token` UUID. El formulario público **solo persiste** si el POST trae un token de un lead existente. GET sin token muestra el form vacío; GET con token inválido → 404.

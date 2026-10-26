@@ -25,7 +25,8 @@
                         </tr>
                         <tr>
                             <td style="font-size:15px;line-height:1.6;padding-bottom:15px;color:#333333;background-color:#f4f6f9;">
-                                Agradecemos su interés en la carrera <strong><t t-out="object.x_CarreraISTMO"/></strong>.<br/>
+                                Agradecemos su interés en el área <strong><t t-out="object.x_area"/></strong>,
+                                carrera <strong><t t-out="object.x_CarreraISTMO"/></strong>.<br/>
                                 O al curso <t t-out="object.x_CarreraTecnica"/><br/><br/>
                                 Para continuar con su proceso de inscripción, haga clic en el siguiente botón:
                             </td>

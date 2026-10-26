@@ -52,6 +52,18 @@ class CrmLead(models.Model):
     x_dpi = fields.Char(string='DPI')
     x_acepta_condiciones = fields.Boolean(string='Acepta Condiciones de Estudio')
     x_formulario_completo = fields.Boolean(string='Formulario Completo', default=False)
+    x_area = fields.Selection(
+        [('ets', 'ETS'), ('tic', 'TIC')],
+        string='Área de interés',
+        copy=False,
+    )
+
+    @api.model
+    def _ets_after_module_update(self):
+        self.env['crm.stage']._ets_apply_stage_order()
+        pages = self.env['website.page'].sudo().search([('url', '=', '/formulario-principal')])
+        if pages:
+            pages.write({'is_published': False})
 
     @api.model_create_multi
     def create(self, vals_list):

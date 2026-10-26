@@ -9,6 +9,7 @@
                 <notebook>
                     <page string="Datos de Inscripción">
                         <group string="Datos Personales">
+                            <field name="x_area"/>
                             <field name="x_whatsapp"/>
                             <field name="x_jornada"/>
                             <field name="x_edad_numero"/>
