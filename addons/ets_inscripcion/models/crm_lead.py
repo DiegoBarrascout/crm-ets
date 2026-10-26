@@ -64,6 +64,51 @@ class CrmLead(models.Model):
         ],
         string='Vínculo con Fundación Kinal',
     )
+    x_kanban_curso = fields.Char(string='Curso de interés', compute='_compute_ets_kanban')
+    x_kanban_detalle = fields.Char(string='Detalle inscripción', compute='_compute_ets_kanban')
+
+    def _ets_tsu_corto(self, raw):
+        return {
+            catalogs.TCU_1ER: 'TSU 1er. año',
+            catalogs.TCU_2DO: 'TSU 2do. año',
+            catalogs.TCU_3ER: 'TSU 3er. año',
+            catalogs.TCU_NO: 'Sin TSU',
+        }.get(raw) or ''
+
+    @api.depends('x_area', 'x_curso_otro', 'phone')
+    def _compute_ets_kanban(self):
+        for lead in self:
+            curso = ''
+            if 'x_CarreraTecnica' in lead._fields:
+                curso = lead.x_CarreraTecnica or ''
+            if lead.x_curso_otro:
+                curso = lead.x_curso_otro
+            if curso == catalogs.OTRO:
+                curso = lead.x_curso_otro or 'Otro'
+            lead.x_kanban_curso = curso
+            partes = []
+            if lead.x_area:
+                partes.append((lead.x_area or '').upper())
+            tsu_raw = lead.x_CarreraISTMO if 'x_CarreraISTMO' in lead._fields else ''
+            tsu = lead._ets_tsu_corto(tsu_raw)
+            if tsu:
+                partes.append(tsu)
+            if lead.phone:
+                partes.append(lead.phone)
+            lead.x_kanban_detalle = ' · '.join(partes)
+
+    def _ets_move_to_informacion_enviada(self):
+        dest = self.env.ref('crm.stage_lead2', raise_if_not_found=False)
+        if not dest:
+            return
+        allowed = set()
+        for xmlid in ('crm.stage_lead1', 'ets_inscripcion.stage_nuevo_tic'):
+            stage = self.env.ref(xmlid, raise_if_not_found=False)
+            if stage:
+                allowed.add(stage.id)
+        for lead in self:
+            if lead.stage_id.id in allowed:
+                lead.stage_id = dest.id
 
     @api.model
     def _ets_ensure_tic_selections(self):
