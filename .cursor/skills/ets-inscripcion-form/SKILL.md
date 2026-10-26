@@ -33,7 +33,7 @@ Olvidar el controller deja el dato en el POST y no en el lead.
 3. Laboral + facturación + vehículo
 4. Condiciones, fecha, nombre alumno, DPI → submit
 
-JS relevante: `nextStep`, `verificarCondiciones`, `actualizarEdad`, `toggleCarne`, `toggleRecomendante`, `toggleVehiculo`. Indicadores `#ind-1`…`#ind-4`, color activo `#008f8c`.
+JS relevante: `nextStep`, `verificarCondiciones`, `actualizarEdad`, `toggleCarne`, `toggleRecomendante`, `toggleVehiculo`. Indicadores `#ind-1`…`#ind-4`, color activo `#195190`. Geo: `#departamento` / `#municipio` desde `guatemala.py`. Confirmación TSU: `#tcu_confirm`, `#carrera_confirm`.
 
 ## Mapping POST → lead
 
@@ -44,12 +44,16 @@ Además de `x_*`, el submit puede:
 - `x_formulario_completo` = True
 - `x_acepta_condiciones` = checkbox presente
 - `x_fecha_inscripcion` parseada con `date.fromisoformat`; futuras → hoy
+- `x_jornada` incluye `entre_semana`
+- `x_departamento` / `x_municipio` validados con `catalogs.geo_ok`
+- Si cambian TSU/curso: escribe Studio `x_CarreraISTMO` / `x_CarreraTecnica` si existen en `_fields`
 
 ## Área y etapas
 
-- `x_area`: `ets` \| `tic`. Etapa al crear: Nuevo (`crm.stage_lead1`) o Nuevo TIC (`ets_inscripcion.stage_nuevo_tic`).
-- Catálogos: `catalogs.py` (`COURSES_BY_TCU`). Curso deshabilitado hasta TSU; año académico no pide curso. Imágenes en `static/src/img/`. Colaborador, no Trabajador.
-- TCU extra ISTMO (`carrera_tcu`) solo si `exige_tcu` (área ETS y `x_CarreraISTMO` ≠ `NO`). El TCU sí se muestra en ambos.
+- `x_area`: `ets` \| `tic`. Etapa al crear: Nuevo (`crm.stage_lead1`) o Nuevo TIC (`ets_inscripcion.stage_nuevo_tic`). Enviar el correo de inscripción mueve a Información Enviada (`crm.stage_lead2`).
+- Catálogos: `catalogs.py` (`COURSES_BY_TCU`, `JORNADAS`) y `guatemala.py`. Curso deshabilitado hasta TSU; año académico no pide curso. Imágenes en `static/src/img/`. Colaborador, no Trabajador.
+- El segundo formulario confirma TSU y curso (editables). No pedir Carrera TCU ni Especialidad.
+- Kanban CRM: `x_kanban_curso`, `x_kanban_detalle` (`views/crm_lead_views.xml`). Correo → etapa: `models/mail_inscripcion.py`.
 
 ## Studio (el primer form ya los escribe)
 

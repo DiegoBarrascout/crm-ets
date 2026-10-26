@@ -3,6 +3,8 @@
     'version': '1.0',
     'summary': 'Módulo de inscripción Escuela Técnica Superior',
     'category': 'CRM',
+    'author': 'Fundación Kinal',
+    'license': 'Other proprietary',
     'depends': ['crm', 'website'],
     'data': [
         'data/crm_stage_data.xml',

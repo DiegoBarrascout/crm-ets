@@ -2,14 +2,18 @@
 
 Repositorio de addons personalizados de **Odoo 18** para el CRM de la Escuela Técnica Superior (ETS) de Fundación Kinal. El módulo principal es `ets_inscripcion`: formulario público de inscripción ligado a oportunidades (`crm.lead`).
 
+**Licencia:** exclusiva de Fundación Kinal. Ver [LICENSE](LICENSE).
+
 ## Flujo de negocio
 
-1. El interesado entra a `/formulario-principal`, elige ETS o TIC en el modal y envía datos personales/carrera.
+1. El interesado entra a `/formulario-principal`, elige ETS o TIC (cards) y envía datos. TSU filtra el curso; 3er año no pide curso; «Otro» pide texto.
 2. Se crea el lead (`x_area`, etapa **Nuevo** o **Nuevo TIC**) y un `x_token` UUID.
-3. Se envía el correo `mail_template_inscripcion` con el enlace `/carreras-tecnicas?token=<x_token>`.
-4. Completa el segundo formulario en 4 pasos. TIC muestra curso técnico y trabajadores TIC; el bloque extra TCU ISTMO solo aplica a ETS.
+3. Admisiones envía `mail_template_inscripcion` (`/carreras-tecnicas?token=`). Ese envío pasa el lead a **Información Enviada**.
+4. El segundo formulario confirma TSU y curso (editables, misma lógica), jornada (sábados o entre semana) y depto/municipio de Guatemala. No pide de nuevo Carrera TCU ni Especialidad.
 5. El POST `/carreras-tecnicas/submit` actualiza el mismo lead y marca `x_formulario_completo`.
 6. Redirect a `/contactus-thank-you`.
+
+En el kanban CRM la card muestra curso, área, TSU corto y teléfono.
 
 Campos de Studio que **no** define este addon pero el formulario y el correo sí leen: `x_trabajadorQueAtendio`, `x_CarreraISTMO`, `x_CarreraTecnica`. No los elimines ni los renombres sin actualizar plantillas.
 
@@ -19,6 +23,7 @@ Campos de Studio que **no** define este addon pero el formulario y el correo sí
 addons/ets_inscripcion/   # addon Odoo 18 (crm + website)
 config/odoo18.conf        # ejemplo de configuración del servidor
 db/crmets.sql             # dump PostgreSQL de referencia (grande; no es el entorno de desarrollo diario)
+LICENSE                   # licencia exclusiva Fundación Kinal
 ```
 
 ## Requisitos

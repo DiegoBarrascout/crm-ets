@@ -5,9 +5,9 @@ alwaysApply: true
 
 # Dominio ETS
 
-Addon `ets_inscripcion` sobre `crm.lead`. Idioma de UI: español (Guatemala). Marca: color `#008f8c`. Contacto de pagos en el formulario: `Infoets@kinal.org.gt`.
+Addon `ets_inscripcion` sobre `crm.lead`. Idioma de UI: español (Guatemala). Marca: color `#195190` (`btn-primary`). Contacto de pagos: `Infoets@kinal.org.gt`. Licencia exclusiva Fundación Kinal.
 
-Primer formulario: `/formulario-principal` (modal ETS/TIC, catálogos en `catalogs.py`). Segundo: `/carreras-tecnicas`. Etapa **Nuevo TIC** entre Nuevo e Información Enviada.
+Primer formulario: `/formulario-principal` (modal ETS/TIC, catálogos en `catalogs.py`). Segundo: `/carreras-tecnicas` (confirma TSU/curso; jornada incluye entre semana; depto/municipio de `guatemala.py`). Etapa **Nuevo TIC** entre Nuevo e Información Enviada. Enviar `mail_template_inscripcion` mueve a Información Enviada. Kanban: curso, área, TSU, teléfono.
 
 ## Token
 
@@ -18,7 +18,7 @@ Cada lead tiene `x_token` UUID. El formulario público **solo persiste** si el P
 - Teléfono GT: 8 dígitos
 - CUI y DPI: 13 dígitos
 - Fecha de inscripción: solo en paso 4, no futura
-- TCU: si `x_CarreraISTMO` no es vacío/`NO`, exigir carrera + especialidad
+- TSU/curso del segundo form: misma lógica que el primero (3er año no pide curso; Otro pide texto). No duplicar Carrera TCU / Especialidad.
 - Enviar: condiciones aceptadas + nombre alumno + DPI 13 + fecha
 
 ## Fuera de alcance

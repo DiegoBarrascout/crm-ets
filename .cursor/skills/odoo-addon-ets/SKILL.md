@@ -9,13 +9,12 @@ description: Develop, install, and update the Odoo 18 addon ets_inscripcion in t
 
 ```
 addons/ets_inscripcion/
-  __init__.py          # models, controllers
-  __manifest__.py      # depends: crm, website; data XML
-  models/crm_lead.py
+  __init__.py / catalogs.py / guatemala.py
+  __manifest__.py      # license Other proprietary; author Fundación Kinal
+  models/crm_lead.py, crm_stage.py, mail_inscripcion.py
   controllers/main.py
-  views/crm_lead_views.xml
-  views/inscripcion_templates.xml
-  views/mail_templates.xml
+  views/crm_lead_views.xml, formulario_principal.xml
+  views/inscripcion_templates.xml, mail_templates.xml
 ```
 
 Nuevos XML van en `data` del manifiesto, en orden de dependencia (vistas backend antes que QWeb si hay refs).

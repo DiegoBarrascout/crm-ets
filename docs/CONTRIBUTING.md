@@ -6,6 +6,7 @@
 - Commits conventional: `feat(ETS-018): …`, `fix(ETS-018): …`, `docs(ETS-018): …`.
 - No trabajar ni pushear en `main`.
 - No commitear `config/odoo18.conf` con passwords reales, `.env` ni PII.
+- El código es de licencia exclusiva de Fundación Kinal (`LICENSE`). No publicarlo ni reutilizarlo fuera de Kinal.
 
 ```bash
 pnpm install   # una vez: Husky

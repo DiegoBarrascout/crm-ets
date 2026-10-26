@@ -46,4 +46,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="crm_lead_kanban_inherit_ets" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.ets</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="x_kanban_curso" class="text-muted" style="white-space:normal;"/>
+                <field name="x_kanban_detalle" class="text-muted small"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

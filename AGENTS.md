@@ -1,6 +1,6 @@
 # AGENTS.md — CRM ETS (Odoo 18)
 
-Este repositorio es un **addon custom de Odoo 18**, no un proyecto Node/Python genérico. El producto es el CRM de inscripción de la Escuela Técnica Superior Kinal.
+Este repositorio es un **addon custom de Odoo 18**, no un proyecto Node/Python genérico. El producto es el CRM de inscripción de la Escuela Técnica Superior Kinal. Licencia exclusiva de Fundación Kinal (`LICENSE`, manifiesto `Other proprietary`).
 
 ## Qué tocar
 
@@ -17,9 +17,9 @@ Este repositorio es un **addon custom de Odoo 18**, no un proyecto Node/Python g
 
 ## Flujo que no debes romper
 
-GET `/formulario-principal` (modal ETS/TIC) → POST crea `crm.lead` con `x_area` y etapa Nuevo o Nuevo TIC → `x_token` → correo con `?token=` → GET `/carreras-tecnicas` → POST `/carreras-tecnicas/submit` → `x_formulario_completo=True`.
+GET `/formulario-principal` (modal ETS/TIC) → POST crea `crm.lead` con `x_area` y etapa Nuevo o Nuevo TIC → `x_token` → correo con `?token=` (mueve a Información Enviada) → GET `/carreras-tecnicas` → POST `/carreras-tecnicas/submit` → `x_formulario_completo=True`.
 
-Catálogos: `catalogs.py`. Nombre Completo es común. TIC cambia curso técnico y trabajadores. No exigir el bloque extra TCU ISTMO (`carrera_tcu` / especialidad) si `x_area == tic`.
+Catálogos: `catalogs.py` y `guatemala.py`. Nombre Completo es común. TIC cambia curso técnico y trabajadores. El segundo formulario confirma TSU y curso; no pide Carrera TCU ni Especialidad. Color de marca: `#195190` (`btn-primary`). Navbar Contáctanos → `/formulario-principal`.
 
 Campos Studio ajenos a este repo, leídos por QWeb/correo:
 
