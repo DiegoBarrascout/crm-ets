@@ -20,7 +20,7 @@
 
                         <div class="d-flex justify-content-between mb-4">
                             <div class="text-center" id="ind-1">
-                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px;background:#008f8c;color:white;">1</div>
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px;background:#195190;color:white;">1</div>
                                 <div class="small mt-1">Datos Personales</div>
                             </div>
                             <div class="text-center" id="ind-2">
@@ -44,7 +44,7 @@
 
                             <!-- PASO 1 -->
                             <div class="step" id="step-1">
-                                <h4 class="mb-3" style="color:#008f8c;">Paso 1: Datos Personales</h4>
+                                <h4 class="mb-3 text-primary">Paso 1: Datos Personales</h4>
                                 <div class="mb-3">
                                     <label class="form-label">Nombre Completo</label>
                                     <input type="text" class="form-control bg-light" t-att-value="lead.name or lead.contact_name or lead.partner_name or ''" readonly="1"/>
@@ -72,9 +72,9 @@
                                 </div>
                                 <t t-if="lead and lead.x_vinculo_centro">
                                 <div class="mb-3">
-                                    <label class="form-label">Vínculo con el Centro Educativo</label>
+                                    <label class="form-label">Vínculo con Fundación Kinal</label>
                                     <input type="text" class="form-control bg-light" readonly="1"
-                                           t-att-value="'Egresado del Centro Educativo' if lead.x_vinculo_centro == 'egresado' else ('Estudiante actual del Centro Educativo' if lead.x_vinculo_centro == 'estudiante' else 'Ninguno de los anteriores')"/>
+                                           t-att-value="'Egresado de Fundación Kinal' if lead.x_vinculo_centro == 'egresado' else ('Estudiante actual de Fundación Kinal' if lead.x_vinculo_centro == 'estudiante' else 'Ninguno de los anteriores')"/>
                                 </div>
                                 </t>
                                 <t t-if="lead and lead.x_vinculo_centro in ('egresado', 'estudiante')">
@@ -153,7 +153,7 @@
 
                             <!-- PASO 2 -->
                             <div class="step d-none" id="step-2">
-                                <h4 class="mb-3" style="color:#008f8c;">Paso 2: Información Adicional</h4>
+                                <h4 class="mb-3 text-primary">Paso 2: Información Adicional</h4>
                                 <div class="mb-3">
                                     <label class="form-label">Edad (en número)</label>
                                     <input type="number" name="edad_numero" id="edad_numero" class="form-control" style="width:100px" min="1" max="99" oninput="actualizarEdad(this.value)"/>
@@ -233,7 +233,7 @@
 
                             <!-- PASO 3 -->
                             <div class="step d-none" id="step-3">
-                                <h4 class="mb-3" style="color:#008f8c;">Paso 3: Datos Laborales y Facturación</h4>
+                                <h4 class="mb-3 text-primary">Paso 3: Datos Laborales y Facturación</h4>
                                 <div class="mb-3">
                                     <label class="form-label">Empresa donde Labora</label>
                                     <input type="text" name="empresa" class="form-control"/>
@@ -297,7 +297,7 @@
 
                             <!-- PASO 4 -->
                             <div class="step d-none" id="step-4">
-                                <h4 class="mb-3" style="color:#008f8c;">Paso 4: Condiciones de Estudio</h4>
+                                <h4 class="mb-3 text-primary">Paso 4: Condiciones de Estudio</h4>
                                 <div class="mb-3">
                                     <div class="border p-3 mb-2" style="max-height:200px;overflow-y:scroll;font-size:0.85em;">
                                         Declaro que: He recibido la Normativa de Evaluación y Convivencia de la Escuela Técnica Superior Kinal y me comprometo a cumplirla. Conozco lo señalado en Actitud y Presentación personal, así como Uso y Cuidado de las Instalaciones, y me obligo a no incurrir en ninguna Falta que ponga en riesgo la continuidad de mis estudios. Comprendo que Fundación Kinal ofrece a jóvenes y adultos una formación integral a través de distintos programas educativos, por lo que me comprometo a realizar puntualmente los aportes económicos que correspondan a mis estudios dentro de los primeros cinco días de cada mes, sin necesidad de cobro o requerimiento alguno. Acepto las medidas oportunas de la Escuela Técnica Superior Kinal si incurriere en atraso a partir de dos meses en los aportes convenidos. Informaré lo más rápido posible a la Escuela Técnica Superior Kinal cuando por algún motivo no pueda continuar con mis estudios. Todos los cursos o carreras técnicas deberán contar con un número mínimo de alumnos para su apertura. NOTA: No se hace ningún reembolsó si después de inscrito el estudiante, no se presenta a clases o si decide retirarse antes o después de iniciadas las actividades de la Carrera Técnica.
@@ -484,7 +484,7 @@
                 function updateIndicators(active) {
                     for (var i = 1; i &lt;= 4; i++) {
                         var circle = document.querySelector('#ind-' + i + ' div');
-                        circle.style.background = (i === active) ? '#008f8c' : '#ccc';
+                        circle.style.background = (i === active) ? '#195190' : '#ccc';
                     }
                 }
 

@@ -61,11 +61,11 @@ class CrmLead(models.Model):
     x_curso_otro = fields.Char(string='Otro curso técnico')
     x_vinculo_centro = fields.Selection(
         [
-            ('egresado', 'Egresado del Centro Educativo'),
-            ('estudiante', 'Estudiante actual del Centro Educativo'),
+            ('egresado', 'Egresado de Fundación Kinal'),
+            ('estudiante', 'Estudiante actual de Fundación Kinal'),
             ('ninguno', 'Ninguno de los anteriores'),
         ],
-        string='Vínculo con el Centro Educativo',
+        string='Vínculo con Fundación Kinal',
     )
 
     @api.model
@@ -95,9 +95,26 @@ class CrmLead(models.Model):
                 seq += 1
 
     @api.model
+    def _ets_align_contact_menu(self):
+        """Navbar Contáctanos debe ir al mismo destino que el CTA btn-primary."""
+        menus = self.env['website.menu'].sudo().search([('url', '=', '/contactus')])
+        if menus:
+            menus.write({'url': '/formulario-principal'})
+
+    @api.model
+    def _ets_align_primary_color(self):
+        tmpl = self.env.ref(
+            'ets_inscripcion.mail_template_inscripcion', raise_if_not_found=False
+        )
+        if tmpl and tmpl.body_html and '#008f8c' in tmpl.body_html:
+            tmpl.body_html = tmpl.body_html.replace('#008f8c', catalogs.COLOR_PRIMARY)
+
+    @api.model
     def _ets_after_module_update(self):
         self.env['crm.stage']._ets_apply_stage_order()
         self._ets_ensure_tic_selections()
+        self._ets_align_contact_menu()
+        self._ets_align_primary_color()
         pages = self.env['website.page'].sudo().search([('url', '=', '/formulario-principal')])
         if pages:
             pages.write({'is_published': False})

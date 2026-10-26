@@ -1,5 +1,8 @@
 """Catálogos del formulario principal. Values = lo que se guarda en el lead."""
 
+# Azul de btn-primary / Contáctanos en el sitio (no el aqua anterior #008f8c).
+COLOR_PRIMARY = '#195190'
+
 TCU_1ER = 'Técnico Universitario (1er. año Carrera Técnica)'
 TCU_2DO = 'Técnico Universitario (2do. año Carrera Técnica)'
 TCU_3ER = 'Técnico Universitario (3er. año) AÑO ACADÉMICO'
@@ -9,8 +12,8 @@ VINCULO_EGRESADO = 'egresado'
 VINCULO_ESTUDIANTE = 'estudiante'
 VINCULO_NINGUNO = 'ninguno'
 VINCULOS = [
-    (VINCULO_EGRESADO, 'Egresado del Centro Educativo'),
-    (VINCULO_ESTUDIANTE, 'Estudiante actual del Centro Educativo'),
+    (VINCULO_EGRESADO, 'Egresado de Fundación Kinal'),
+    (VINCULO_ESTUDIANTE, 'Estudiante actual de Fundación Kinal'),
     (VINCULO_NINGUNO, 'Ninguno de los anteriores'),
 ]
 
