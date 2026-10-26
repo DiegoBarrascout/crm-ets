@@ -30,13 +30,9 @@ class MailComposeMessage(models.TransientModel):
         for wizard in self:
             if not tmpl or not wizard.template_id or wizard.template_id.id != tmpl.id:
                 continue
-            model = wizard.res_model or getattr(wizard, 'model', None)
-            if model != 'crm.lead':
+            if wizard.model != 'crm.lead':
                 continue
-            if hasattr(wizard, '_evaluate_res_ids'):
-                lead_ids.extend(wizard._evaluate_res_ids() or [])
-            elif wizard.res_id:
-                lead_ids.append(wizard.res_id)
+            lead_ids.extend(wizard._evaluate_res_ids() or [])
         result = super()._action_send_mail(*args, **kwargs)
         if lead_ids:
             self.env['crm.lead'].browse(lead_ids)._ets_move_to_informacion_enviada()
