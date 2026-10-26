@@ -18,7 +18,7 @@ TCU_ETS = [
     (TCU_1ER, 'Técnico Superior Universitario (1er. año)'),
     (TCU_2DO, 'Técnico Superior Universitario (2do. año)'),
     (TCU_3ER, 'Técnico Superior Universitario (3er. año) AÑO ACADÉMICO'),
-    (TCU_NO, 'No'),
+    (TCU_NO, 'No aplica'),
 ]
 TCU_TIC = list(TCU_ETS)
 
