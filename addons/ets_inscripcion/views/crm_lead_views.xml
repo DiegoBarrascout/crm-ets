@@ -58,6 +58,7 @@
                     <field class="fw-bold fs-5" name="name"/>
                     <field name="x_kanban_curso" class="text-muted" style="white-space:normal;"/>
                     <field name="x_kanban_detalle" class="text-muted small"/>
+                    <field name="email_from" widget="email" class="text-muted text-truncate"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="lead_properties" widget="properties"/>
                     <footer class="pt-1">
