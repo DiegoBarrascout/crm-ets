@@ -8,10 +8,7 @@ class CrmLead(models.Model):
     x_token = fields.Char(string='Token de Inscripción', readonly=True, copy=False)
     x_cui = fields.Char(string='CUI')
     x_whatsapp = fields.Selection([('si', 'Sí'), ('no', 'No')], string='WhatsApp')
-    x_jornada = fields.Selection([
-        ('matutina', 'Matutina - sábados (08:00 a 12:30)'),
-        ('vespertina', 'Vespertina - sábados (13:00 a 17:30)'),
-    ], string='Jornada')
+    x_jornada = fields.Selection(catalogs.JORNADAS, string='Jornada')
     x_fecha_inscripcion = fields.Date(string='Fecha de Inscripción')
     x_edad_numero = fields.Integer(string='Edad (en número)')
     x_edad = fields.Selection([('menor', 'Menor de edad'), ('mayor', 'Mayor de edad')], string='Edad')
