@@ -1,0 +1,12 @@
+name: Feature
+description: Funcionalidad
+title: '[ETS-???] '
+labels: [feature]
+body:
+  - type: textarea
+    id: d
+    attributes:
+      label: Contexto
+      description: Objetivo y criterios de aceptación
+    validations:
+      required: true

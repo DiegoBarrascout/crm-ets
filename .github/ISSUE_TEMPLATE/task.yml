@@ -1,0 +1,11 @@
+name: Task
+description: Tarea ETS
+title: '[ETS-???] '
+labels: [task]
+body:
+  - type: textarea
+    id: d
+    attributes:
+      label: Descripción
+    validations:
+      required: true

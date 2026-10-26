@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Workflow Git
+    url: https://github.com/DiegoBarrascout/crm-ets/blob/main/docs/GITHUB-WORKFLOW.md
+    about: Issues ETS-XXX, ramas y PRs
+  - name: Agentes
+    url: https://github.com/DiegoBarrascout/crm-ets/blob/main/AGENTS.md
+    about: Contexto para Cursor y otros agentes

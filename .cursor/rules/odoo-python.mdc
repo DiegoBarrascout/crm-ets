@@ -1,0 +1,25 @@
+---
+description: Convenciones Python Odoo 18 para ets_inscripcion
+globs: addons/**/*.py
+alwaysApply: false
+---
+
+# Python Odoo 18
+
+- API 2.0: `models.Model`, `_inherit`, decoradores `@api.model_create_multi` / `@api.depends`.
+- No uses `osv`, `cr.execute` ad-hoc ni `_columns`.
+- Controllers: `odoo.http`, `request.env`, `request.render`, CSRF en POST.
+- En rutas `auth='public'`, `sudo()` solo para el registro localizado por `x_token`. No `search([])` amplio.
+- Al añadir un campo al lead, actualiza el `vals` del POST si el formulario lo envía.
+- `create` de `crm.lead` debe seguir generando `x_token` si falta.
+- Fechas: no persistir fechas futuras; el submit ya recorta a `date.today()`.
+- Enteros desde HTTP: `int(... or 0)` con fallback; no dejes que un string vacío rompa el POST.
+
+```python
+# ❌ BAD — write sin token
+lead = request.env['crm.lead'].sudo().browse(int(kwargs['id']))
+lead.write(kwargs)
+
+# ✅ GOOD
+lead = request.env['crm.lead'].sudo().search([('x_token', '=', token)], limit=1)
+```

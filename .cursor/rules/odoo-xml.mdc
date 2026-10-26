@@ -1,0 +1,18 @@
+---
+description: Convenciones QWeb y vistas XML del módulo ETS
+globs: addons/**/*.xml
+alwaysApply: false
+---
+
+# XML / QWeb
+
+- Vistas backend: inherit + `xpath`. No redefinir `crm.crm_lead_view_form` completo.
+- Formulario público: template `ets_inscripcion.formulario_inscripcion`, layout `website.layout`.
+- CSRF: `<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>`.
+- Token: hidden `name="token"` desde `lead.x_token`.
+- En QWeb, escapar comparadores: `&amp;&amp;`, `&lt;`, `&gt;`.
+- El wizard de 4 pasos (`step-1`…`step-4`, `nextStep`/`prevStep`) es JS inline. Mantén ids y nombres de input alineados con `controllers/main.py`.
+- Campos Studio (`x_CarreraISTMO`, `x_CarreraTecnica`, `x_trabajadorQueAtendio`) se leen en QWeb; no asumas que existen en `crm_lead.py`.
+- Plantilla de correo: `noupdate="1"`. Un cambio en XML no actualiza bases ya instaladas hasta forzar el registro.
+
+Claves de selection ya en producción (no renombrar): `compañero_trabajo`, `matutina`, `vespertina`, `primer_ingreso`, `reingreso`.

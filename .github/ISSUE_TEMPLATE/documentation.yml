@@ -1,0 +1,11 @@
+name: Documentation
+description: Docs, AGENTS, skills o workflow
+title: '[ETS-???] '
+labels: [documentation]
+body:
+  - type: textarea
+    id: d
+    attributes:
+      label: Qué documentar
+    validations:
+      required: true
