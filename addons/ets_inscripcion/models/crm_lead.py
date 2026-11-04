@@ -110,6 +110,23 @@ class CrmLead(models.Model):
             if lead.stage_id.id in allowed:
                 lead.stage_id = dest.id
 
+    def _ets_move_to_carrera_seleccionada(self):
+        dest = self.env.ref('crm.stage_lead3', raise_if_not_found=False)
+        if not dest:
+            return
+        allowed = set()
+        for xmlid in (
+            'crm.stage_lead1',
+            'ets_inscripcion.stage_nuevo_tic',
+            'crm.stage_lead2',
+        ):
+            stage = self.env.ref(xmlid, raise_if_not_found=False)
+            if stage:
+                allowed.add(stage.id)
+        for lead in self:
+            if not lead.stage_id or lead.stage_id.id in allowed:
+                lead.stage_id = dest.id
+
     @api.model
     def _ets_ensure_tic_selections(self):
         """Añade valores TIC a campos Studio (selection) si ya existen."""

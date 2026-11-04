@@ -216,5 +216,6 @@ class EtsInscripcion(http.Controller):
             vals['name'] = nombre_alumno
 
         lead.sudo().write(vals)
+        lead.sudo()._ets_move_to_carrera_seleccionada()
 
         return request.redirect('/contactus-thank-you')
