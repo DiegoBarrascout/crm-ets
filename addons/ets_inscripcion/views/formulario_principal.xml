@@ -3,48 +3,65 @@
     <template id="formulario_principal" name="Formulario Principal ETS/TIC">
         <t t-call="website.layout">
             <style>
-                .ets-steps {
+                .ets-wizard {
                     --ets-primary: #195190;
                     --ets-primary-soft: rgba(25, 81, 144, 0.08);
                     --ets-border: #d7e2ef;
+                    --ets-text: #17324d;
+                    --ets-muted: #6c757d;
                 }
-                .ets-steps .ets-crumb {
+                .ets-wizard .ets-progress {
                     display: flex;
+                    gap: 0.4rem;
                     flex-wrap: wrap;
-                    gap: 0.35rem;
-                    align-items: center;
-                    font-size: 0.8rem;
-                    color: #6c757d;
-                    margin-bottom: 0.75rem;
-                    min-height: 1.25rem;
+                    margin-bottom: 1rem;
                 }
-                .ets-steps .ets-crumb button {
-                    background: none;
-                    border: 0;
-                    padding: 0;
+                .ets-wizard .ets-progress span {
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    letter-spacing: 0.02em;
+                    text-transform: uppercase;
+                    color: var(--ets-muted);
+                    background: #f4f7fb;
+                    border: 1px solid var(--ets-border);
+                    border-radius: 999px;
+                    padding: 0.28rem 0.7rem;
+                }
+                .ets-wizard .ets-progress span.is-active {
+                    color: #fff;
+                    background: var(--ets-primary);
+                    border-color: var(--ets-primary);
+                }
+                .ets-wizard .ets-progress span.is-done {
                     color: var(--ets-primary);
-                    font-weight: 600;
-                    cursor: pointer;
+                    background: var(--ets-primary-soft);
+                    border-color: #b9cce3;
                 }
-                .ets-steps .ets-crumb .sep { opacity: 0.5; }
-                .ets-steps .ets-panel-head {
+                .ets-wizard .ets-panel {
+                    border: 1px solid var(--ets-border);
+                    border-radius: 1rem;
+                    background: #fff;
+                    padding: 1rem 1.1rem 1.15rem;
+                    box-shadow: 0 8px 24px rgba(23, 50, 77, 0.04);
+                }
+                .ets-wizard .ets-panel-head {
                     display: flex;
                     align-items: flex-start;
                     justify-content: space-between;
                     gap: 0.75rem;
-                    margin-bottom: 1rem;
+                    margin-bottom: 0.85rem;
                 }
-                .ets-steps .ets-panel-head h2 {
-                    font-size: 1.15rem;
+                .ets-wizard .ets-panel-head h2 {
+                    font-size: 1.12rem;
                     margin: 0;
-                    color: #1a1a1a;
+                    color: var(--ets-text);
                 }
-                .ets-steps .ets-panel-head p {
-                    margin: 0.25rem 0 0;
-                    color: #6c757d;
-                    font-size: 0.9rem;
+                .ets-wizard .ets-panel-head p {
+                    margin: 0.2rem 0 0;
+                    color: var(--ets-muted);
+                    font-size: 0.88rem;
                 }
-                .ets-steps .ets-back {
+                .ets-wizard .ets-back {
                     border: 1px solid var(--ets-border);
                     background: #fff;
                     color: var(--ets-primary);
@@ -53,140 +70,241 @@
                     font-size: 0.85rem;
                     white-space: nowrap;
                 }
-                .ets-steps .ets-back:hover { background: var(--ets-primary-soft); }
-                .ets-steps .ets-grid {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    gap: 0.75rem;
-                }
-                @media (min-width: 768px) {
-                    .ets-steps .ets-grid.ets-grid-2 {
-                        grid-template-columns: 1fr 1fr;
-                    }
-                }
-                .ets-steps .ets-card {
+                .ets-wizard .ets-back:hover { background: var(--ets-primary-soft); }
+                .ets-wizard .ets-crumb {
                     display: flex;
-                    gap: 0.85rem;
-                    align-items: flex-start;
-                    text-align: left;
-                    width: 100%;
-                    border: 1px solid var(--ets-border);
-                    background: #fff;
-                    border-radius: 0.85rem;
-                    padding: 0.95rem 1rem;
-                    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+                    flex-wrap: wrap;
+                    gap: 0.3rem;
+                    align-items: center;
+                    font-size: 0.78rem;
+                    color: var(--ets-muted);
+                    margin-bottom: 0.65rem;
+                    min-height: 1.1rem;
+                }
+                .ets-wizard .ets-crumb button {
+                    background: none;
+                    border: 0;
+                    padding: 0;
+                    color: var(--ets-primary);
+                    font-weight: 600;
                     cursor: pointer;
                 }
-                .ets-steps .ets-card:hover,
-                .ets-steps .ets-card:focus {
-                    border-color: var(--ets-primary);
-                    box-shadow: 0 0 0 3px var(--ets-primary-soft);
-                    outline: none;
-                    transform: translateY(-1px);
+                .ets-wizard .ets-crumb .sep { opacity: 0.45; }
+                .ets-wizard .ets-note {
+                    border-left: 3px solid var(--ets-primary);
+                    background: var(--ets-primary-soft);
+                    padding: 0.55rem 0.75rem;
+                    border-radius: 0 0.45rem 0.45rem 0;
+                    font-size: 0.82rem;
+                    color: #35506b;
+                    margin-bottom: 0.75rem;
                 }
-                .ets-steps .ets-card.is-selected {
+                .ets-wizard .ets-empty {
+                    border: 1px dashed var(--ets-border);
+                    border-radius: 0.75rem;
+                    padding: 1rem;
+                    text-align: center;
+                    color: var(--ets-muted);
+                    font-size: 0.9rem;
+                }
+                .ets-wizard .ets-choice-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.45rem;
+                }
+                .ets-wizard .ets-choice {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    width: 100%;
+                    text-align: left;
+                    border: 1px solid var(--ets-border);
+                    background: #fff;
+                    border-radius: 0.7rem;
+                    padding: 0.7rem 0.8rem;
+                    cursor: pointer;
+                    transition: border-color .15s ease, background .15s ease;
+                }
+                .ets-wizard .ets-choice:hover,
+                .ets-wizard .ets-choice:focus {
+                    border-color: var(--ets-primary);
+                    background: var(--ets-primary-soft);
+                    outline: none;
+                }
+                .ets-wizard .ets-choice.is-selected {
                     border-color: var(--ets-primary);
                     background: var(--ets-primary-soft);
                 }
-                .ets-steps .ets-icon {
-                    flex: 0 0 2.5rem;
-                    width: 2.5rem;
-                    height: 2.5rem;
-                    border-radius: 0.7rem;
+                .ets-wizard .ets-choice-icon {
+                    flex: 0 0 2rem;
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 0.55rem;
                     background: var(--ets-primary-soft);
                     color: var(--ets-primary);
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
                 }
-                .ets-steps .ets-icon svg {
-                    width: 1.25rem;
-                    height: 1.25rem;
+                .ets-wizard .ets-choice-icon svg {
+                    width: 1.05rem;
+                    height: 1.05rem;
                     fill: none;
                     stroke: currentColor;
                     stroke-width: 1.8;
                     stroke-linecap: round;
                     stroke-linejoin: round;
                 }
-                .ets-steps .ets-card-body { flex: 1; min-width: 0; }
-                .ets-steps .ets-card-title {
-                    font-weight: 650;
-                    color: #17324d;
+                .ets-wizard .ets-choice-body { flex: 1; min-width: 0; }
+                .ets-wizard .ets-choice-title {
                     margin: 0;
-                    font-size: 0.98rem;
+                    font-size: 0.95rem;
+                    font-weight: 650;
+                    color: var(--ets-text);
                 }
-                .ets-steps .ets-card-sub {
-                    margin: 0.2rem 0 0;
-                    color: #6c757d;
-                    font-size: 0.82rem;
+                .ets-wizard .ets-choice-sub {
+                    margin: 0.12rem 0 0;
+                    font-size: 0.78rem;
+                    color: var(--ets-muted);
+                    line-height: 1.35;
                 }
-                .ets-steps .ets-badge {
-                    display: inline-block;
-                    margin-top: 0.45rem;
+                .ets-wizard .ets-choice-meta {
+                    flex: 0 0 auto;
                     font-size: 0.72rem;
-                    font-weight: 600;
+                    font-weight: 700;
                     color: var(--ets-primary);
                     background: #fff;
                     border: 1px solid var(--ets-border);
                     border-radius: 999px;
-                    padding: 0.15rem 0.55rem;
+                    padding: 0.12rem 0.5rem;
+                    white-space: nowrap;
                 }
-                .ets-steps .ets-group-title {
-                    font-size: 0.78rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.04em;
-                    color: #7a8796;
-                    margin: 0.85rem 0 0.45rem;
-                    font-weight: 700;
+                .ets-wizard .ets-choice-chevron {
+                    color: #9aabbc;
+                    font-size: 1.1rem;
+                    line-height: 1;
                 }
-                .ets-steps .ets-note {
-                    border-left: 3px solid var(--ets-primary);
-                    background: var(--ets-primary-soft);
-                    padding: 0.65rem 0.8rem;
-                    border-radius: 0 0.5rem 0.5rem 0;
-                    font-size: 0.85rem;
-                    color: #35506b;
-                    margin-bottom: 0.85rem;
-                }
-                .ets-steps .ets-empty {
-                    border: 1px dashed var(--ets-border);
-                    border-radius: 0.75rem;
-                    padding: 1.25rem;
-                    text-align: center;
-                    color: #6c757d;
-                }
-                .ets-contact.is-locked {
-                    opacity: 0.55;
-                    pointer-events: none;
-                }
-                .ets-contact .ets-lock-hint {
-                    font-size: 0.85rem;
-                    color: #6c757d;
-                    margin-bottom: 0.75rem;
-                }
-                .ets-selection-chip {
-                    display: none;
-                    align-items: center;
+                .ets-wizard .ets-tools {
+                    display: flex;
                     gap: 0.5rem;
+                    margin-bottom: 0.65rem;
+                }
+                .ets-wizard .ets-tools input {
+                    flex: 1;
+                    border: 1px solid var(--ets-border);
+                    border-radius: 0.55rem;
+                    padding: 0.45rem 0.7rem;
+                    font-size: 0.88rem;
+                }
+                .ets-wizard .ets-tools input:focus {
+                    outline: none;
+                    border-color: var(--ets-primary);
+                    box-shadow: 0 0 0 3px var(--ets-primary-soft);
+                }
+                .ets-wizard .ets-course-scroll {
+                    max-height: min(46vh, 380px);
+                    overflow: auto;
+                    border: 1px solid var(--ets-border);
+                    border-radius: 0.75rem;
+                    background: #fbfcfe;
+                }
+                .ets-wizard .ets-group {
+                    border-bottom: 1px solid var(--ets-border);
+                }
+                .ets-wizard .ets-group:last-child { border-bottom: 0; }
+                .ets-wizard .ets-group-toggle {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 0.5rem;
+                    border: 0;
+                    background: #f3f7fb;
+                    padding: 0.55rem 0.75rem;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    letter-spacing: 0.03em;
+                    text-transform: uppercase;
+                    color: #5d6f82;
+                    cursor: pointer;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                }
+                .ets-wizard .ets-group-toggle .count {
+                    font-size: 0.7rem;
+                    color: var(--ets-primary);
+                    background: #fff;
+                    border: 1px solid var(--ets-border);
+                    border-radius: 999px;
+                    padding: 0.08rem 0.45rem;
+                    text-transform: none;
+                    letter-spacing: 0;
+                }
+                .ets-wizard .ets-row {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.55rem;
+                    text-align: left;
+                    border: 0;
+                    border-top: 1px solid #e8eef5;
+                    background: #fff;
+                    padding: 0.55rem 0.75rem;
+                    cursor: pointer;
+                }
+                .ets-wizard .ets-row:hover,
+                .ets-wizard .ets-row:focus {
+                    background: var(--ets-primary-soft);
+                    outline: none;
+                }
+                .ets-wizard .ets-row.is-selected {
+                    background: var(--ets-primary-soft);
+                    box-shadow: inset 3px 0 0 var(--ets-primary);
+                }
+                .ets-wizard .ets-row-title {
+                    margin: 0;
+                    font-size: 0.88rem;
+                    font-weight: 600;
+                    color: var(--ets-text);
+                    line-height: 1.3;
+                }
+                .ets-wizard .ets-row-sub {
+                    margin: 0.1rem 0 0;
+                    font-size: 0.74rem;
+                    color: var(--ets-muted);
+                }
+                .ets-wizard .ets-row-mark {
+                    margin-left: auto;
+                    color: var(--ets-primary);
+                    font-weight: 700;
+                    opacity: 0;
+                }
+                .ets-wizard .ets-row.is-selected .ets-row-mark { opacity: 1; }
+                .ets-wizard .ets-footer-row {
+                    margin-top: 0.65rem;
+                }
+                .ets-wizard .ets-summary {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.65rem;
                     flex-wrap: wrap;
                     background: var(--ets-primary-soft);
-                    border: 1px solid var(--ets-border);
-                    border-radius: 0.65rem;
-                    padding: 0.65rem 0.8rem;
+                    border: 1px solid #c5d7eb;
+                    border-radius: 0.7rem;
+                    padding: 0.7rem 0.8rem;
                     margin-bottom: 1rem;
                     font-size: 0.88rem;
                 }
-                .ets-selection-chip.is-visible { display: flex; }
-                .ets-selection-chip strong { color: var(--ets-primary); }
-                .ets-selection-chip button {
+                .ets-wizard .ets-summary strong { color: var(--ets-primary); }
+                .ets-wizard .ets-summary button {
                     margin-left: auto;
-                    border: 0;
+                    border: 1px solid var(--ets-border);
                     background: #fff;
                     color: var(--ets-primary);
                     border-radius: 0.4rem;
                     padding: 0.2rem 0.55rem;
                     font-size: 0.8rem;
-                    border: 1px solid var(--ets-border);
                 }
             </style>
 
@@ -234,61 +352,74 @@
                             </div>
 
                             <div class="col-lg-7">
-                                <div class="ets-steps mb-4" id="ets-steps">
-                                    <div class="ets-crumb" id="ets-crumb" aria-label="Navegación del programa"></div>
-                                    <div class="ets-panel-head">
-                                        <div>
-                                            <h2 id="ets-step-title">Elige tu programa</h2>
-                                            <p id="ets-step-sub">Selecciona la modalidad que más se acerque a tu interés.</p>
+                                <div class="ets-wizard" id="ets-wizard">
+                                    <div class="ets-progress" id="ets-progress" aria-label="Progreso"></div>
+
+                                    <div class="ets-panel" id="ets-browse-panel">
+                                        <div class="ets-crumb" id="ets-crumb" aria-label="Navegación del programa"></div>
+                                        <div class="ets-panel-head">
+                                            <div>
+                                                <h2 id="ets-step-title">Paso 1 · Elige tu programa</h2>
+                                                <p id="ets-step-sub">Selecciona una de las 3 opciones para continuar.</p>
+                                            </div>
+                                            <button type="button" class="ets-back d-none" id="ets-back">Atrás</button>
                                         </div>
-                                        <button type="button" class="ets-back d-none" id="ets-back">Atrás</button>
+                                        <div id="ets-note" class="ets-note d-none"></div>
+                                        <div id="ets-step-body"></div>
+                                        <div id="ets-catalog-error" class="ets-empty d-none">
+                                            No se pudo cargar el catálogo de cursos. Intenta de nuevo en unos minutos.
+                                        </div>
                                     </div>
-                                    <div id="ets-note" class="ets-note d-none"></div>
-                                    <div id="ets-step-body" class="ets-grid ets-grid-2"></div>
-                                    <div id="ets-catalog-error" class="ets-empty d-none">
-                                        No se pudo cargar el catálogo de cursos. Intenta de nuevo en unos minutos.
-                                    </div>
-                                </div>
 
-                                <div id="ets-selection-chip" class="ets-selection-chip">
-                                    <span>Selección:</span>
-                                    <strong id="ets-selection-label"></strong>
-                                    <button type="button" id="ets-clear-selection">Cambiar</button>
-                                </div>
+                                    <div class="ets-panel d-none" id="ets-contact-panel">
+                                        <div class="ets-panel-head">
+                                            <div>
+                                                <h2>Paso final · Tus datos</h2>
+                                                <p>Completa el contacto para enviar tu solicitud.</p>
+                                            </div>
+                                            <button type="button" class="ets-back" id="ets-back-contact">Atrás</button>
+                                        </div>
 
-                                <div class="mb-3 d-none" id="campo_curso_otro">
-                                    <label class="form-label">Especifique el curso *</label>
-                                    <input type="text" name="curso_otro" id="curso_otro" class="form-control" disabled="disabled"/>
-                                </div>
+                                        <div class="ets-summary" id="ets-summary">
+                                            <div>
+                                                <div class="small text-muted">Selección</div>
+                                                <strong id="ets-selection-label"></strong>
+                                            </div>
+                                            <button type="button" id="ets-clear-selection">Cambiar programa</button>
+                                        </div>
 
-                                <div class="ets-contact is-locked" id="ets-contact">
-                                    <p class="ets-lock-hint" id="ets-lock-hint">
-                                        Completa la selección del programa para habilitar tus datos de contacto.
-                                    </p>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre Completo *</label>
-                                        <input type="text" name="name" id="field_name" class="form-control" required="1" disabled="disabled"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Teléfono *</label>
-                                        <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1" disabled="disabled"/>
-                                        <small class="text-muted">8 dígitos, sin guiones ni espacios.</small>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Correo electrónico *</label>
-                                        <input type="email" name="email_from" id="field_email" class="form-control" required="1" disabled="disabled"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label"><t t-esc="cat['label_colaborador']"/> *</label>
-                                        <select name="x_trabajadorQueAtendio" id="field_colaborador" class="form-select" required="1" disabled="disabled">
-                                            <option value="">Seleccione...</option>
-                                            <t t-foreach="cat['trabajadores']" t-as="opt">
-                                                <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <div class="text-end">
-                                        <button type="submit" class="btn btn-lg btn-primary" id="btn-enviar" disabled="disabled">Enviar</button>
+                                        <div class="mb-3 d-none" id="campo_curso_otro">
+                                            <label class="form-label">Especifique el curso *</label>
+                                            <input type="text" name="curso_otro" id="curso_otro" class="form-control" disabled="disabled"/>
+                                        </div>
+
+                                        <div id="ets-contact">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nombre Completo *</label>
+                                                <input type="text" name="name" id="field_name" class="form-control" required="1" disabled="disabled"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Teléfono *</label>
+                                                <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1" disabled="disabled"/>
+                                                <small class="text-muted">8 dígitos, sin guiones ni espacios.</small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Correo electrónico *</label>
+                                                <input type="email" name="email_from" id="field_email" class="form-control" required="1" disabled="disabled"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"><t t-esc="cat['label_colaborador']"/> *</label>
+                                                <select name="x_trabajadorQueAtendio" id="field_colaborador" class="form-select" required="1" disabled="disabled">
+                                                    <option value="">Seleccione...</option>
+                                                    <t t-foreach="cat['trabajadores']" t-as="opt">
+                                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <div class="text-end">
+                                                <button type="submit" class="btn btn-lg btn-primary" id="btn-enviar" disabled="disabled">Enviar</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -365,22 +496,27 @@
                     var tree = parseJson('ets-steps-json', {});
                     var otroValue = (tree &amp;&amp; tree.otro_value) || 'Otras';
                     var stack = [];
+                    var phase = 'browse';
                     var selectedCourseName = '';
+                    var selectedLabel = '';
+                    var courseFilter = '';
+                    var openGroups = {};
 
+                    var progressEl = document.getElementById('ets-progress');
+                    var browsePanel = document.getElementById('ets-browse-panel');
+                    var contactPanel = document.getElementById('ets-contact-panel');
                     var bodyEl = document.getElementById('ets-step-body');
                     var titleEl = document.getElementById('ets-step-title');
                     var subEl = document.getElementById('ets-step-sub');
                     var crumbEl = document.getElementById('ets-crumb');
                     var backBtn = document.getElementById('ets-back');
+                    var backContactBtn = document.getElementById('ets-back-contact');
                     var noteEl = document.getElementById('ets-note');
                     var errorEl = document.getElementById('ets-catalog-error');
                     var modalityField = document.getElementById('field_modality');
                     var courseField = document.getElementById('field_course');
                     var otroWrap = document.getElementById('campo_curso_otro');
                     var otroInp = document.getElementById('curso_otro');
-                    var contactBox = document.getElementById('ets-contact');
-                    var lockHint = document.getElementById('ets-lock-hint');
-                    var chip = document.getElementById('ets-selection-chip');
                     var chipLabel = document.getElementById('ets-selection-label');
                     var clearBtn = document.getElementById('ets-clear-selection');
                     var submitBtn = document.getElementById('btn-enviar');
@@ -405,12 +541,10 @@
                     };
 
                     function iconHtml(key) {
-                        return '<span class="ets-icon">' + (ICONS[key] || ICONS.course) + '</span>';
+                        return '&lt;span class="ets-choice-icon"&gt;' + (ICONS[key] || ICONS.course) + '&lt;/span&gt;';
                     }
 
                     function setContactEnabled(enabled) {
-                        if (contactBox) contactBox.classList.toggle('is-locked', !enabled);
-                        if (lockHint) lockHint.classList.toggle('d-none', enabled);
                         contactFields.forEach(function (f) {
                             if (!f) return;
                             if (enabled) f.removeAttribute('disabled');
@@ -435,48 +569,85 @@
                         }
                     }
 
-                    function clearSelectionKeepStack() {
+                    function clearSelection() {
                         selectedCourseName = '';
+                        selectedLabel = '';
                         if (modalityField) modalityField.value = '';
                         if (courseField) courseField.value = '';
                         setOtroVisible(false);
                         setContactEnabled(false);
-                        if (chip) chip.classList.remove('is-visible');
                         if (chipLabel) chipLabel.textContent = '';
                     }
 
-                    function applySelection(modality, courseName, modalityLabel) {
-                        selectedCourseName = courseName || '';
-                        if (modalityField) modalityField.value = modality || '';
-                        if (courseField) courseField.value = courseName || '';
-                        var isOtro = courseName === otroValue;
-                        setOtroVisible(isOtro);
-                        setContactEnabled(true);
-                        if (chip &amp;&amp; chipLabel) {
-                            chipLabel.textContent = (modalityLabel || modality || '') + (courseName ? ' · ' + courseName : '');
-                            chip.classList.add('is-visible');
-                        }
-                        if (isOtro &amp;&amp; otroInp) otroInp.focus();
-                        else {
-                            var name = document.getElementById('field_name');
-                            if (name) name.focus();
+                    function showPhase(next) {
+                        phase = next;
+                        if (browsePanel) browsePanel.classList.toggle('d-none', phase !== 'browse');
+                        if (contactPanel) contactPanel.classList.toggle('d-none', phase !== 'contact');
+                        renderProgress();
+                        if (phase === 'contact') {
+                            setContactEnabled(true);
+                            if (selectedCourseName === otroValue &amp;&amp; otroInp) otroInp.focus();
+                            else {
+                                var name = document.getElementById('field_name');
+                                if (name) name.focus();
+                            }
+                            if (contactPanel) contactPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
                     }
 
-                    function makeCard(opts) {
+                    function currentBrowseStep() {
+                        if (!stack.length) return 1;
+                        var frame = stack[stack.length - 1];
+                        if (frame.type === 'courses') return 3;
+                        return 2;
+                    }
+
+                    function renderProgress() {
+                        if (!progressEl) return;
+                        progressEl.innerHTML = '';
+                        var labels = ['1 Programa', '2 Opción', '3 Curso', '4 Datos'];
+                        var active = phase === 'contact' ? 4 : currentBrowseStep();
+                        labels.forEach(function (label, idx) {
+                            var n = idx + 1;
+                            var span = document.createElement('span');
+                            span.textContent = label;
+                            if (n === active) span.className = 'is-active';
+                            else if (n &lt; active) span.className = 'is-done';
+                            progressEl.appendChild(span);
+                        });
+                    }
+
+                    function makeChoice(opts) {
                         var btn = document.createElement('button');
                         btn.type = 'button';
-                        btn.className = 'ets-card' + (opts.selected ? ' is-selected' : '');
+                        btn.className = 'ets-choice' + (opts.selected ? ' is-selected' : '');
                         btn.innerHTML =
                             iconHtml(opts.icon || 'course') +
-                            '&lt;span class="ets-card-body"&gt;' +
-                                '&lt;p class="ets-card-title"&gt;&lt;/p&gt;' +
-                                (opts.subtitle ? '&lt;p class="ets-card-sub"&gt;&lt;/p&gt;' : '') +
-                                (opts.badge ? '&lt;span class="ets-badge"&gt;&lt;/span&gt;' : '') +
-                            '&lt;/span&gt;';
-                        btn.querySelector('.ets-card-title').textContent = opts.title || '';
-                        if (opts.subtitle) btn.querySelector('.ets-card-sub').textContent = opts.subtitle;
-                        if (opts.badge) btn.querySelector('.ets-badge').textContent = opts.badge;
+                            '&lt;span class="ets-choice-body"&gt;' +
+                                '&lt;p class="ets-choice-title"&gt;&lt;/p&gt;' +
+                                (opts.subtitle ? '&lt;p class="ets-choice-sub"&gt;&lt;/p&gt;' : '') +
+                            '&lt;/span&gt;' +
+                            (opts.badge ? '&lt;span class="ets-choice-meta"&gt;&lt;/span&gt;' : '') +
+                            '&lt;span class="ets-choice-chevron" aria-hidden="true"&gt;›&lt;/span&gt;';
+                        btn.querySelector('.ets-choice-title').textContent = opts.title || '';
+                        if (opts.subtitle) btn.querySelector('.ets-choice-sub').textContent = opts.subtitle;
+                        if (opts.badge) btn.querySelector('.ets-choice-meta').textContent = opts.badge;
+                        if (opts.onClick) btn.addEventListener('click', opts.onClick);
+                        return btn;
+                    }
+
+                    function makeRow(opts) {
+                        var btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'ets-row' + (opts.selected ? ' is-selected' : '');
+                        btn.innerHTML =
+                            '&lt;span class="ets-choice-body"&gt;' +
+                                '&lt;p class="ets-row-title"&gt;&lt;/p&gt;' +
+                                (opts.subtitle ? '&lt;p class="ets-row-sub"&gt;&lt;/p&gt;' : '') +
+                            '&lt;/span&gt;' +
+                            '&lt;span class="ets-row-mark" aria-hidden="true"&gt;✓&lt;/span&gt;';
+                        btn.querySelector('.ets-row-title').textContent = opts.title || '';
+                        if (opts.subtitle) btn.querySelector('.ets-row-sub').textContent = opts.subtitle;
                         if (opts.onClick) btn.addEventListener('click', opts.onClick);
                         return btn;
                     }
@@ -484,12 +655,16 @@
                     function renderCrumb() {
                         if (!crumbEl) return;
                         crumbEl.innerHTML = '';
+                        if (!stack.length) return;
                         var home = document.createElement('button');
                         home.type = 'button';
                         home.textContent = 'Programa';
                         home.addEventListener('click', function () {
                             stack = [];
-                            clearSelectionKeepStack();
+                            courseFilter = '';
+                            openGroups = {};
+                            clearSelection();
+                            showPhase('browse');
                             render();
                         });
                         crumbEl.appendChild(home);
@@ -503,7 +678,9 @@
                             b.textContent = frame.crumb || frame.title || ('Paso ' + (idx + 1));
                             b.addEventListener('click', function () {
                                 stack = stack.slice(0, idx + 1);
-                                clearSelectionKeepStack();
+                                courseFilter = '';
+                                clearSelection();
+                                showPhase('browse');
                                 render();
                             });
                             crumbEl.appendChild(b);
@@ -511,19 +688,54 @@
                     }
 
                     function pushFrame(frame) {
-                        clearSelectionKeepStack();
+                        clearSelection();
+                        courseFilter = '';
+                        openGroups = {};
                         stack.push(frame);
+                        showPhase('browse');
                         render();
+                    }
+
+                    function applySelection(modality, courseName, modalityLabel) {
+                        selectedCourseName = courseName || '';
+                        selectedLabel = (modalityLabel || modality || '') + (courseName ? ' · ' + courseName : '');
+                        if (modalityField) modalityField.value = modality || '';
+                        if (courseField) courseField.value = courseName || '';
+                        var isOtro = courseName === otroValue;
+                        setOtroVisible(isOtro);
+                        if (chipLabel) chipLabel.textContent = selectedLabel;
+                        showPhase('contact');
                     }
 
                     function renderCourses(frame) {
                         var courses = frame.courses || [];
                         var modality = frame.modality_value || '';
                         var modalityLabel = frame.modality_label || frame.title || '';
+                        var q = (courseFilter || '').toLowerCase().trim();
+
+                        var tools = document.createElement('div');
+                        tools.className = 'ets-tools';
+                        var input = document.createElement('input');
+                        input.type = 'search';
+                        input.placeholder = 'Buscar curso...';
+                        input.value = courseFilter;
+                        input.addEventListener('input', function () {
+                            courseFilter = this.value || '';
+                            render();
+                            var again = document.querySelector('#ets-step-body input[type=search]');
+                            if (again) {
+                                again.focus();
+                                var val = again.value;
+                                again.setSelectionRange(val.length, val.length);
+                            }
+                        });
+                        tools.appendChild(input);
+                        bodyEl.appendChild(tools);
+
                         var groups = {};
                         var order = [];
-
                         courses.forEach(function (c) {
+                            if (q &amp;&amp; String(c.nombre || '').toLowerCase().indexOf(q) === -1) return;
                             var g = c.area_nombre || 'Cursos disponibles';
                             if (!groups[g]) {
                                 groups[g] = [];
@@ -532,50 +744,73 @@
                             groups[g].push(c);
                         });
 
+                        var scroll = document.createElement('div');
+                        scroll.className = 'ets-course-scroll';
+
                         if (!order.length) {
                             var empty = document.createElement('div');
                             empty.className = 'ets-empty';
-                            empty.textContent = 'No hay cursos disponibles en esta opción por ahora.';
-                            bodyEl.appendChild(empty);
+                            empty.style.border = '0';
+                            empty.textContent = q
+                                ? 'No hay cursos que coincidan con la búsqueda.'
+                                : 'No hay cursos disponibles en esta opción por ahora.';
+                            scroll.appendChild(empty);
                         } else {
-                            order.forEach(function (gName) {
-                                if (order.length &gt; 1) {
-                                    var h = document.createElement('div');
-                                    h.className = 'ets-group-title';
-                                    h.style.gridColumn = '1 / -1';
-                                    h.textContent = gName;
-                                    bodyEl.appendChild(h);
-                                }
-                                groups[gName].forEach(function (c) {
-                                    bodyEl.appendChild(makeCard({
-                                        title: c.nombre,
-                                        subtitle: c.anio_curso ? ('Año ' + c.anio_curso) : (c.area_nombre || ''),
-                                        icon: 'course',
-                                        selected: selectedCourseName === c.nombre,
-                                        onClick: function () {
-                                            applySelection(modality, c.nombre, modalityLabel);
-                                            render();
-                                        }
-                                    }));
+                            order.forEach(function (gName, gIdx) {
+                                var group = document.createElement('div');
+                                group.className = 'ets-group';
+                                var open = openGroups[gName];
+                                if (typeof open === 'undefined') open = order.length === 1 || gIdx === 0 || !!q;
+                                openGroups[gName] = open;
+
+                                var toggle = document.createElement('button');
+                                toggle.type = 'button';
+                                toggle.className = 'ets-group-toggle';
+                                toggle.innerHTML = '&lt;span&gt;&lt;/span&gt;&lt;span class="count"&gt;&lt;/span&gt;';
+                                toggle.querySelector('span').textContent = (open ? '▾ ' : '▸ ') + gName;
+                                toggle.querySelector('.count').textContent = groups[gName].length;
+                                toggle.addEventListener('click', function () {
+                                    openGroups[gName] = !openGroups[gName];
+                                    render();
                                 });
+                                group.appendChild(toggle);
+
+                                if (open) {
+                                    groups[gName].forEach(function (c) {
+                                        group.appendChild(makeRow({
+                                            title: c.nombre,
+                                            subtitle: c.anio_curso ? ('Año ' + c.anio_curso) : '',
+                                            selected: selectedCourseName === c.nombre,
+                                            onClick: function () {
+                                                applySelection(modality, c.nombre, modalityLabel);
+                                            }
+                                        }));
+                                    });
+                                }
+                                scroll.appendChild(group);
                             });
                         }
+                        bodyEl.appendChild(scroll);
 
-                        bodyEl.appendChild(makeCard({
+                        var footer = document.createElement('div');
+                        footer.className = 'ets-footer-row';
+                        footer.appendChild(makeChoice({
                             title: 'Otro',
                             subtitle: 'Si no aparece tu curso, especifícalo',
                             icon: 'other',
                             selected: selectedCourseName === otroValue,
                             onClick: function () {
                                 applySelection(modality, otroValue, modalityLabel);
-                                render();
                             }
                         }));
+                        bodyEl.appendChild(footer);
                     }
 
                     function renderRoot() {
+                        var list = document.createElement('div');
+                        list.className = 'ets-choice-list';
                         (tree.options || []).forEach(function (opt) {
-                            bodyEl.appendChild(makeCard({
+                            list.appendChild(makeChoice({
                                 title: (opt.num ? opt.num + '. ' : '') + (opt.title || ''),
                                 subtitle: opt.subtitle || '',
                                 badge: opt.badge || '',
@@ -593,7 +828,7 @@
                                         pushFrame({
                                             type: 'courses',
                                             title: opt.title,
-                                            subtitle: opt.subtitle,
+                                            subtitle: 'Elige un curso para continuar',
                                             crumb: opt.title,
                                             modality_value: opt.modality_value,
                                             modality_label: opt.modality_label || opt.title,
@@ -604,11 +839,14 @@
                                 }
                             }));
                         });
+                        bodyEl.appendChild(list);
                     }
 
                     function renderSuboptions(frame) {
+                        var list = document.createElement('div');
+                        list.className = 'ets-choice-list';
                         (frame.items || []).forEach(function (item) {
-                            bodyEl.appendChild(makeCard({
+                            list.appendChild(makeChoice({
                                 title: item.title || '',
                                 subtitle: item.subtitle || '',
                                 badge: item.badge || '',
@@ -618,7 +856,7 @@
                                         pushFrame({
                                             type: 'years',
                                             title: item.title,
-                                            subtitle: item.subtitle,
+                                            subtitle: 'Selecciona el año académico',
                                             crumb: item.title,
                                             years: item.years,
                                         });
@@ -626,7 +864,7 @@
                                         pushFrame({
                                             type: 'courses',
                                             title: item.title,
-                                            subtitle: item.subtitle,
+                                            subtitle: 'Elige un curso para continuar',
                                             crumb: item.title,
                                             modality_value: item.modality_value,
                                             modality_label: item.modality_label || item.title,
@@ -637,12 +875,15 @@
                                 }
                             }));
                         });
+                        bodyEl.appendChild(list);
                     }
 
                     function renderYears(frame) {
+                        var list = document.createElement('div');
+                        list.className = 'ets-choice-list';
                         (frame.years || []).forEach(function (yr) {
                             var count = (yr.courses || []).length;
-                            bodyEl.appendChild(makeCard({
+                            list.appendChild(makeChoice({
                                 title: yr.title || ('Año ' + yr.anio),
                                 subtitle: yr.subtitle || '',
                                 badge: count ? (count + ' cursos') : 'Sin cursos',
@@ -651,7 +892,7 @@
                                     pushFrame({
                                         type: 'courses',
                                         title: yr.title,
-                                        subtitle: yr.subtitle,
+                                        subtitle: 'Elige un curso para continuar',
                                         crumb: yr.title,
                                         modality_value: yr.modality_value,
                                         modality_label: yr.modality_label || yr.title,
@@ -661,39 +902,44 @@
                                 }
                             }));
                         });
+                        bodyEl.appendChild(list);
                     }
 
                     function render() {
                         if (!bodyEl) return;
                         bodyEl.innerHTML = '';
-                        bodyEl.className = 'ets-grid ets-grid-2';
 
                         if (!tree || !tree.catalogo_listo || !(tree.options || []).length) {
                             if (titleEl) titleEl.textContent = 'Catálogo no disponible';
                             if (subEl) subEl.textContent = 'No se pudieron obtener los programas en este momento.';
                             if (errorEl) errorEl.classList.remove('d-none');
                             if (backBtn) backBtn.classList.add('d-none');
+                            showPhase('browse');
                             setContactEnabled(false);
                             return;
                         }
                         if (errorEl) errorEl.classList.add('d-none');
 
                         var frame = stack.length ? stack[stack.length - 1] : null;
-                        if (titleEl) titleEl.textContent = frame ? (frame.title || 'Selecciona') : 'Elige tu programa';
+                        var stepNo = currentBrowseStep();
+                        if (titleEl) {
+                            titleEl.textContent = frame
+                                ? ('Paso ' + stepNo + ' · ' + (frame.title || 'Selecciona'))
+                                : 'Paso 1 · Elige tu programa';
+                        }
                         if (subEl) {
                             subEl.textContent = frame
                                 ? (frame.subtitle || 'Continúa con la opción que mejor te represente.')
-                                : 'Selecciona la modalidad que más se acerque a tu interés.';
+                                : 'Selecciona una de las 3 opciones para continuar.';
                         }
                         if (noteEl) {
                             var note = frame &amp;&amp; frame.note ? frame.note : '';
                             noteEl.textContent = note;
                             noteEl.classList.toggle('d-none', !note);
                         }
-                        if (backBtn) {
-                            backBtn.classList.toggle('d-none', !stack.length);
-                        }
+                        if (backBtn) backBtn.classList.toggle('d-none', !stack.length);
                         renderCrumb();
+                        renderProgress();
 
                         if (!frame) renderRoot();
                         else if (frame.type === 'suboptions') renderSuboptions(frame);
@@ -704,20 +950,27 @@
                     if (backBtn) {
                         backBtn.addEventListener('click', function () {
                             stack.pop();
-                            clearSelectionKeepStack();
+                            courseFilter = '';
+                            clearSelection();
+                            showPhase('browse');
+                            render();
+                        });
+                    }
+                    if (backContactBtn) {
+                        backContactBtn.addEventListener('click', function () {
+                            clearSelection();
+                            showPhase('browse');
                             render();
                         });
                     }
                     if (clearBtn) {
                         clearBtn.addEventListener('click', function () {
-                            clearSelectionKeepStack();
-                            if (stack.length &amp;&amp; stack[stack.length - 1].type === 'courses') {
-                                render();
-                            } else {
-                                stack = [];
-                                render();
-                            }
-                            if (bodyEl) bodyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            clearSelection();
+                            stack = [];
+                            courseFilter = '';
+                            openGroups = {};
+                            showPhase('browse');
+                            render();
                         });
                     }
 
@@ -755,6 +1008,11 @@
                     var form = document.getElementById('form-principal');
                     if (form) {
                         form.addEventListener('submit', function (ev) {
+                            if (phase !== 'contact') {
+                                ev.preventDefault();
+                                alert('Completa la selección del programa primero.');
+                                return;
+                            }
                             if (!modalityField || !modalityField.value) {
                                 ev.preventDefault();
                                 alert('Selecciona un programa antes de enviar.');
@@ -778,7 +1036,8 @@
                         });
                     }
 
-                    setContactEnabled(false);
+                    clearSelection();
+                    showPhase('browse');
                     render();
                 });
             </script>
