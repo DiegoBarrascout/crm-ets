@@ -7,7 +7,9 @@ from odoo.addons.ets_inscripcion import catalogs
 
 
 def _studio_write(vals, field_name, value):
-    if field_name in request.env['crm.lead']._fields and value:
+    Lead = request.env['crm.lead'].sudo()
+    if field_name in Lead._fields and value:
+        Lead._ets_ensure_studio_selection_value(field_name, value)
         vals[field_name] = value
 
 
@@ -28,9 +30,10 @@ class EtsInscripcion(http.Controller):
         return request.render('ets_inscripcion.formulario_principal', {
             'area': area,
             'cat': cat,
-            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()})),
+            'steps_tree_json': Markup(json.dumps(cat['steps_tree'], ensure_ascii=False)),
+            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()}, ensure_ascii=False)),
             'tcu_disable_json': Markup(json.dumps(cat['tcu_disable'])),
-            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'])),
+            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'], ensure_ascii=False)),
         })
 
     @http.route('/formulario-principal/submit', type='http', auth='public', website=True, methods=['POST'], csrf=True)
@@ -66,10 +69,7 @@ class EtsInscripcion(http.Controller):
         ):
             return request.redirect('/formulario-principal?area=%s' % area)
 
-        if catalogs.carrera_disabled(tcu):
-            carrera = ''
-            curso_otro = ''
-        elif not catalogs.value_allowed(cursos_ok, carrera) or (carrera == catalogs.OTRO and not curso_otro):
+        if not catalogs.value_allowed(cursos_ok, carrera) or (carrera == catalogs.OTRO and not curso_otro):
             return request.redirect('/formulario-principal?area=%s' % area)
 
         vals = {
@@ -120,9 +120,9 @@ class EtsInscripcion(http.Controller):
             'cat': cat,
             'tcu_val': tcu_val,
             'carrera_val': carrera_val,
-            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()})),
+            'courses_json': Markup(json.dumps({k: list(v) for k, v in cat['courses_by_tcu'].items()}, ensure_ascii=False)),
             'tcu_disable_json': Markup(json.dumps(cat['tcu_disable'])),
-            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'])),
+            'tcu_notes_json': Markup(json.dumps(cat['tcu_notes'], ensure_ascii=False)),
             'municipios_json': Markup(json.dumps(catalogs.MUNICIPIOS_GT, ensure_ascii=False)),
         })
 
@@ -200,7 +200,7 @@ class EtsInscripcion(http.Controller):
         cursos_ok = catalogs.courses_for(area, tcu)
         if catalogs.value_allowed(cat['tcu'], tcu):
             _studio_write(vals, 'x_CarreraISTMO', tcu)
-            if catalogs.carrera_disabled(tcu):
+            if tcu == catalogs.TCU_3ER and not carrera:
                 vals['x_curso_otro'] = False
                 if 'x_CarreraTecnica' in request.env['crm.lead']._fields:
                     vals['x_CarreraTecnica'] = False
