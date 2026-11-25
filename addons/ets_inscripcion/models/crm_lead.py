@@ -73,6 +73,8 @@ class CrmLead(models.Model):
             catalogs.TCU_2DO: 'TSU 2do. año',
             catalogs.TCU_3ER: 'TSU 3er. año',
             catalogs.TCU_NO: 'Sin TSU',
+            catalogs.MOD_DIPLOMADO: 'Diplomado Virtual',
+            catalogs.MOD_EMPRESA: 'Curso a Empresas',
         }.get(raw) or ''
 
     @api.depends('x_area', 'x_curso_otro', 'phone')
@@ -128,11 +130,33 @@ class CrmLead(models.Model):
                 lead.stage_id = dest.id
 
     @api.model
+    def _ets_ensure_studio_selection_value(self, field_name, value):
+        """Garantiza que un valor dinámico exista en un campo Studio selection antes de escribir."""
+        if not field_name or not value:
+            return
+        Field = self.env['ir.model.fields'].sudo()
+        Selection = self.env['ir.model.fields.selection'].sudo()
+        field = Field.search([('model', '=', 'crm.lead'), ('name', '=', field_name)], limit=1)
+        if not field or field.ttype != 'selection':
+            return
+        exists = Selection.search(
+            [('field_id', '=', field.id), ('value', '=', value)], limit=1
+        )
+        if not exists:
+            Selection.create({
+                'field_id': field.id,
+                'value': value,
+                'name': value,
+                'sequence': 500,
+            })
+
+    @api.model
     def _ets_ensure_tic_selections(self):
-        """Añade valores TIC a campos Studio (selection) si ya existen."""
+        """Añade valores dinámicos de la API y modalidades a campos Studio (selection) si ya existen."""
         Field = self.env['ir.model.fields'].sudo()
         Selection = self.env['ir.model.fields.selection'].sudo()
         extras = {
+            'x_CarreraISTMO': catalogs.all_modality_values(),
             'x_CarreraTecnica': catalogs.all_course_values(),
             'x_trabajadorQueAtendio': [v for v, _l in catalogs.TRABAJADORES_ETS + catalogs.TRABAJADORES_TIC],
         }

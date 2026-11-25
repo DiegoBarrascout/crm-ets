@@ -2,11 +2,202 @@
 <odoo>
     <template id="formulario_principal" name="Formulario Principal ETS/TIC">
         <t t-call="website.layout">
+            <style>
+                .ets-steps {
+                    --ets-primary: #195190;
+                    --ets-primary-soft: rgba(25, 81, 144, 0.08);
+                    --ets-border: #d7e2ef;
+                }
+                .ets-steps .ets-crumb {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.35rem;
+                    align-items: center;
+                    font-size: 0.8rem;
+                    color: #6c757d;
+                    margin-bottom: 0.75rem;
+                    min-height: 1.25rem;
+                }
+                .ets-steps .ets-crumb button {
+                    background: none;
+                    border: 0;
+                    padding: 0;
+                    color: var(--ets-primary);
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+                .ets-steps .ets-crumb .sep { opacity: 0.5; }
+                .ets-steps .ets-panel-head {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 0.75rem;
+                    margin-bottom: 1rem;
+                }
+                .ets-steps .ets-panel-head h2 {
+                    font-size: 1.15rem;
+                    margin: 0;
+                    color: #1a1a1a;
+                }
+                .ets-steps .ets-panel-head p {
+                    margin: 0.25rem 0 0;
+                    color: #6c757d;
+                    font-size: 0.9rem;
+                }
+                .ets-steps .ets-back {
+                    border: 1px solid var(--ets-border);
+                    background: #fff;
+                    color: var(--ets-primary);
+                    border-radius: 0.5rem;
+                    padding: 0.35rem 0.7rem;
+                    font-size: 0.85rem;
+                    white-space: nowrap;
+                }
+                .ets-steps .ets-back:hover { background: var(--ets-primary-soft); }
+                .ets-steps .ets-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 0.75rem;
+                }
+                @media (min-width: 768px) {
+                    .ets-steps .ets-grid.ets-grid-2 {
+                        grid-template-columns: 1fr 1fr;
+                    }
+                }
+                .ets-steps .ets-card {
+                    display: flex;
+                    gap: 0.85rem;
+                    align-items: flex-start;
+                    text-align: left;
+                    width: 100%;
+                    border: 1px solid var(--ets-border);
+                    background: #fff;
+                    border-radius: 0.85rem;
+                    padding: 0.95rem 1rem;
+                    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+                    cursor: pointer;
+                }
+                .ets-steps .ets-card:hover,
+                .ets-steps .ets-card:focus {
+                    border-color: var(--ets-primary);
+                    box-shadow: 0 0 0 3px var(--ets-primary-soft);
+                    outline: none;
+                    transform: translateY(-1px);
+                }
+                .ets-steps .ets-card.is-selected {
+                    border-color: var(--ets-primary);
+                    background: var(--ets-primary-soft);
+                }
+                .ets-steps .ets-icon {
+                    flex: 0 0 2.5rem;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    border-radius: 0.7rem;
+                    background: var(--ets-primary-soft);
+                    color: var(--ets-primary);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .ets-steps .ets-icon svg {
+                    width: 1.25rem;
+                    height: 1.25rem;
+                    fill: none;
+                    stroke: currentColor;
+                    stroke-width: 1.8;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                }
+                .ets-steps .ets-card-body { flex: 1; min-width: 0; }
+                .ets-steps .ets-card-title {
+                    font-weight: 650;
+                    color: #17324d;
+                    margin: 0;
+                    font-size: 0.98rem;
+                }
+                .ets-steps .ets-card-sub {
+                    margin: 0.2rem 0 0;
+                    color: #6c757d;
+                    font-size: 0.82rem;
+                }
+                .ets-steps .ets-badge {
+                    display: inline-block;
+                    margin-top: 0.45rem;
+                    font-size: 0.72rem;
+                    font-weight: 600;
+                    color: var(--ets-primary);
+                    background: #fff;
+                    border: 1px solid var(--ets-border);
+                    border-radius: 999px;
+                    padding: 0.15rem 0.55rem;
+                }
+                .ets-steps .ets-group-title {
+                    font-size: 0.78rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.04em;
+                    color: #7a8796;
+                    margin: 0.85rem 0 0.45rem;
+                    font-weight: 700;
+                }
+                .ets-steps .ets-note {
+                    border-left: 3px solid var(--ets-primary);
+                    background: var(--ets-primary-soft);
+                    padding: 0.65rem 0.8rem;
+                    border-radius: 0 0.5rem 0.5rem 0;
+                    font-size: 0.85rem;
+                    color: #35506b;
+                    margin-bottom: 0.85rem;
+                }
+                .ets-steps .ets-empty {
+                    border: 1px dashed var(--ets-border);
+                    border-radius: 0.75rem;
+                    padding: 1.25rem;
+                    text-align: center;
+                    color: #6c757d;
+                }
+                .ets-contact.is-locked {
+                    opacity: 0.55;
+                    pointer-events: none;
+                }
+                .ets-contact .ets-lock-hint {
+                    font-size: 0.85rem;
+                    color: #6c757d;
+                    margin-bottom: 0.75rem;
+                }
+                .ets-selection-chip {
+                    display: none;
+                    align-items: center;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                    background: var(--ets-primary-soft);
+                    border: 1px solid var(--ets-border);
+                    border-radius: 0.65rem;
+                    padding: 0.65rem 0.8rem;
+                    margin-bottom: 1rem;
+                    font-size: 0.88rem;
+                }
+                .ets-selection-chip.is-visible { display: flex; }
+                .ets-selection-chip strong { color: var(--ets-primary); }
+                .ets-selection-chip button {
+                    margin-left: auto;
+                    border: 0;
+                    background: #fff;
+                    color: var(--ets-primary);
+                    border-radius: 0.4rem;
+                    padding: 0.2rem 0.55rem;
+                    font-size: 0.8rem;
+                    border: 1px solid var(--ets-border);
+                }
+            </style>
+
             <div class="container d-flex flex-column justify-content-center py-4" style="min-height:calc(100vh - 12rem);">
                 <t t-if="area">
                     <form action="/formulario-principal/submit" method="post" id="form-principal">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <input type="hidden" name="area" t-att-value="area"/>
+                        <input type="hidden" name="x_CarreraISTMO" id="field_modality" value=""/>
+                        <input type="hidden" name="x_CarreraTecnica" id="field_course" value=""/>
+
                         <div class="row g-4 align-items-start">
                             <div class="col-lg-5">
                                 <div class="card border-0 shadow-sm overflow-hidden mb-4">
@@ -41,51 +232,64 @@
                                     <small class="text-muted">Alfanumérico.</small>
                                 </div>
                             </div>
+
                             <div class="col-lg-7">
-                                <div class="mb-3">
-                                    <label class="form-label">Nombre Completo *</label>
-                                    <input type="text" name="name" class="form-control" required="1"/>
+                                <div class="ets-steps mb-4" id="ets-steps">
+                                    <div class="ets-crumb" id="ets-crumb" aria-label="Navegación del programa"></div>
+                                    <div class="ets-panel-head">
+                                        <div>
+                                            <h2 id="ets-step-title">Elige tu programa</h2>
+                                            <p id="ets-step-sub">Selecciona la modalidad que más se acerque a tu interés.</p>
+                                        </div>
+                                        <button type="button" class="ets-back d-none" id="ets-back">Atrás</button>
+                                    </div>
+                                    <div id="ets-note" class="ets-note d-none"></div>
+                                    <div id="ets-step-body" class="ets-grid ets-grid-2"></div>
+                                    <div id="ets-catalog-error" class="ets-empty d-none">
+                                        No se pudo cargar el catálogo de cursos. Intenta de nuevo en unos minutos.
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Teléfono *</label>
-                                    <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1"/>
-                                    <small class="text-muted">8 dígitos, sin guiones ni espacios.</small>
+
+                                <div id="ets-selection-chip" class="ets-selection-chip">
+                                    <span>Selección:</span>
+                                    <strong id="ets-selection-label"></strong>
+                                    <button type="button" id="ets-clear-selection">Cambiar</button>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Correo electrónico *</label>
-                                    <input type="email" name="email_from" class="form-control" required="1"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><t t-esc="cat['label_tsu']"/> *</label>
-                                    <select name="x_CarreraISTMO" id="tcu_principal" class="form-select" required="1">
-                                        <option value="">Seleccione...</option>
-                                        <t t-foreach="cat['tcu']" t-as="opt">
-                                            <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><t t-esc="cat['label_carrera']"/> *</label>
-                                    <select name="x_CarreraTecnica" id="carrera_principal" class="form-select" required="1" disabled="disabled">
-                                        <option value="">Seleccione primero el TSU...</option>
-                                    </select>
-                                    <small id="nota_carrera" class="text-muted d-none"></small>
-                                </div>
+
                                 <div class="mb-3 d-none" id="campo_curso_otro">
                                     <label class="form-label">Especifique el curso *</label>
-                                    <input type="text" name="curso_otro" id="curso_otro" class="form-control"/>
+                                    <input type="text" name="curso_otro" id="curso_otro" class="form-control" disabled="disabled"/>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label"><t t-esc="cat['label_colaborador']"/> *</label>
-                                    <select name="x_trabajadorQueAtendio" class="form-select" required="1">
-                                        <option value="">Seleccione...</option>
-                                        <t t-foreach="cat['trabajadores']" t-as="opt">
-                                            <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-lg btn-primary">Enviar</button>
+
+                                <div class="ets-contact is-locked" id="ets-contact">
+                                    <p class="ets-lock-hint" id="ets-lock-hint">
+                                        Completa la selección del programa para habilitar tus datos de contacto.
+                                    </p>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre Completo *</label>
+                                        <input type="text" name="name" id="field_name" class="form-control" required="1" disabled="disabled"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Teléfono *</label>
+                                        <input type="text" name="phone" id="phone" class="form-control" maxlength="8" required="1" disabled="disabled"/>
+                                        <small class="text-muted">8 dígitos, sin guiones ni espacios.</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Correo electrónico *</label>
+                                        <input type="email" name="email_from" id="field_email" class="form-control" required="1" disabled="disabled"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label"><t t-esc="cat['label_colaborador']"/> *</label>
+                                        <select name="x_trabajadorQueAtendio" id="field_colaborador" class="form-select" required="1" disabled="disabled">
+                                            <option value="">Seleccione...</option>
+                                            <t t-foreach="cat['trabajadores']" t-as="opt">
+                                                <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-lg btn-primary" id="btn-enviar" disabled="disabled">Enviar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,13 +341,11 @@
                 </div>
             </div>
 
-            <script type="application/json" id="ets-courses-json"><t t-out="courses_json or '{}'"/></script>
-            <script type="application/json" id="ets-tcu-disable-json"><t t-out="tcu_disable_json or '[]'"/></script>
-            <script type="application/json" id="ets-tcu-notes-json"><t t-out="tcu_notes_json or '{}'"/></script>
+            <script type="application/json" id="ets-steps-json"><t t-out="steps_tree_json or '{}'"/></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    var area = <t t-if="area">true</t><t t-else="">false</t>;
-                    if (!area) {
+                    var hasArea = <t t-if="area">true</t><t t-else="">false</t>;
+                    if (!hasArea) {
                         var el = document.getElementById('modal-area');
                         if (el &amp;&amp; window.bootstrap) {
                             new bootstrap.Modal(el).show();
@@ -151,12 +353,7 @@
                             el.classList.add('show');
                             el.style.display = 'block';
                         }
-                    }
-                    var phone = document.getElementById('phone');
-                    if (phone) {
-                        phone.addEventListener('input', function () {
-                            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
-                        });
+                        return;
                     }
 
                     function parseJson(id, fallback) {
@@ -164,54 +361,370 @@
                         if (!node) return fallback;
                         try { return JSON.parse(node.textContent); } catch (e) { return fallback; }
                     }
-                    var coursesByTcu = parseJson('ets-courses-json', {});
-                    var tcuDisable = parseJson('ets-tcu-disable-json', []);
-                    var tcuNotes = parseJson('ets-tcu-notes-json', {});
-                    var tcuSel = document.getElementById('tcu_principal');
-                    var carrera = document.getElementById('carrera_principal');
+
+                    var tree = parseJson('ets-steps-json', {});
+                    var otroValue = (tree &amp;&amp; tree.otro_value) || 'Otras';
+                    var stack = [];
+                    var selectedCourseName = '';
+
+                    var bodyEl = document.getElementById('ets-step-body');
+                    var titleEl = document.getElementById('ets-step-title');
+                    var subEl = document.getElementById('ets-step-sub');
+                    var crumbEl = document.getElementById('ets-crumb');
+                    var backBtn = document.getElementById('ets-back');
+                    var noteEl = document.getElementById('ets-note');
+                    var errorEl = document.getElementById('ets-catalog-error');
+                    var modalityField = document.getElementById('field_modality');
+                    var courseField = document.getElementById('field_course');
                     var otroWrap = document.getElementById('campo_curso_otro');
-                    var nota = document.getElementById('nota_carrera');
+                    var otroInp = document.getElementById('curso_otro');
+                    var contactBox = document.getElementById('ets-contact');
+                    var lockHint = document.getElementById('ets-lock-hint');
+                    var chip = document.getElementById('ets-selection-chip');
+                    var chipLabel = document.getElementById('ets-selection-label');
+                    var clearBtn = document.getElementById('ets-clear-selection');
+                    var submitBtn = document.getElementById('btn-enviar');
+                    var contactFields = [
+                        document.getElementById('field_name'),
+                        document.getElementById('phone'),
+                        document.getElementById('field_email'),
+                        document.getElementById('field_colaborador'),
+                    ];
 
-                    function fillCarreras(tcu) {
-                        if (!carrera) return;
-                        carrera.innerHTML = '';
-                        var disabled = !tcu || tcuDisable.indexOf(tcu) !== -1;
-                        var opts = coursesByTcu[tcu] || [];
-                        var first = document.createElement('option');
-                        first.value = '';
-                        if (disabled) {
-                            first.textContent = tcu ? 'No aplica para año académico' : 'Seleccione primero el TSU...';
-                            carrera.appendChild(first);
-                            carrera.disabled = true;
-                            carrera.removeAttribute('required');
-                            carrera.value = '';
+                    var ICONS = {
+                        graduation: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/><path d="M22 10v6"/></svg>',
+                        tools: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5z"/></svg>',
+                        code: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/><path d="M13 6l-2 12"/></svg>',
+                        university: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-5 9 5-9 5-9-5z"/><path d="M7 12v5l5 3 5-3v-5"/><path d="M21 10v7"/></svg>',
+                        laptop: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/><path d="M8 20l1-4h6l1 4"/></svg>',
+                        briefcase: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
+                        book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+                        course: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+                        other: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>',
+                        year: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>'
+                    };
+
+                    function iconHtml(key) {
+                        return '<span class="ets-icon">' + (ICONS[key] || ICONS.course) + '</span>';
+                    }
+
+                    function setContactEnabled(enabled) {
+                        if (contactBox) contactBox.classList.toggle('is-locked', !enabled);
+                        if (lockHint) lockHint.classList.toggle('d-none', enabled);
+                        contactFields.forEach(function (f) {
+                            if (!f) return;
+                            if (enabled) f.removeAttribute('disabled');
+                            else f.setAttribute('disabled', 'disabled');
+                        });
+                        if (submitBtn) {
+                            if (enabled) submitBtn.removeAttribute('disabled');
+                            else submitBtn.setAttribute('disabled', 'disabled');
+                        }
+                    }
+
+                    function setOtroVisible(show) {
+                        if (!otroWrap || !otroInp) return;
+                        otroWrap.classList.toggle('d-none', !show);
+                        if (show) {
+                            otroInp.removeAttribute('disabled');
+                            otroInp.setAttribute('required', 'required');
                         } else {
-                            first.textContent = 'Seleccione...';
-                            carrera.appendChild(first);
-                            opts.forEach(function (pair) {
-                                var o = document.createElement('option');
-                                o.value = pair[0];
-                                o.textContent = pair[1];
-                                carrera.appendChild(o);
-                            });
-                            carrera.disabled = false;
-                            carrera.setAttribute('required', 'required');
+                            otroInp.removeAttribute('required');
+                            otroInp.setAttribute('disabled', 'disabled');
+                            otroInp.value = '';
                         }
-                        if (nota) {
-                            var msg = tcuNotes[tcu] || '';
-                            nota.textContent = msg;
-                            nota.classList.toggle('d-none', !msg);
-                        }
-                        if (otroWrap) otroWrap.classList.add('d-none');
                     }
 
-                    if (tcuSel &amp;&amp; carrera) {
-                        tcuSel.addEventListener('change', function () { fillCarreras(this.value); });
-                        fillCarreras(tcuSel.value);
+                    function clearSelectionKeepStack() {
+                        selectedCourseName = '';
+                        if (modalityField) modalityField.value = '';
+                        if (courseField) courseField.value = '';
+                        setOtroVisible(false);
+                        setContactEnabled(false);
+                        if (chip) chip.classList.remove('is-visible');
+                        if (chipLabel) chipLabel.textContent = '';
                     }
-                    if (carrera &amp;&amp; otroWrap) {
-                        carrera.addEventListener('change', function () {
-                            otroWrap.classList.toggle('d-none', this.value !== 'Otras');
+
+                    function applySelection(modality, courseName, modalityLabel) {
+                        selectedCourseName = courseName || '';
+                        if (modalityField) modalityField.value = modality || '';
+                        if (courseField) courseField.value = courseName || '';
+                        var isOtro = courseName === otroValue;
+                        setOtroVisible(isOtro);
+                        setContactEnabled(true);
+                        if (chip &amp;&amp; chipLabel) {
+                            chipLabel.textContent = (modalityLabel || modality || '') + (courseName ? ' · ' + courseName : '');
+                            chip.classList.add('is-visible');
+                        }
+                        if (isOtro &amp;&amp; otroInp) otroInp.focus();
+                        else {
+                            var name = document.getElementById('field_name');
+                            if (name) name.focus();
+                        }
+                    }
+
+                    function makeCard(opts) {
+                        var btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'ets-card' + (opts.selected ? ' is-selected' : '');
+                        btn.innerHTML =
+                            iconHtml(opts.icon || 'course') +
+                            '&lt;span class="ets-card-body"&gt;' +
+                                '&lt;p class="ets-card-title"&gt;&lt;/p&gt;' +
+                                (opts.subtitle ? '&lt;p class="ets-card-sub"&gt;&lt;/p&gt;' : '') +
+                                (opts.badge ? '&lt;span class="ets-badge"&gt;&lt;/span&gt;' : '') +
+                            '&lt;/span&gt;';
+                        btn.querySelector('.ets-card-title').textContent = opts.title || '';
+                        if (opts.subtitle) btn.querySelector('.ets-card-sub').textContent = opts.subtitle;
+                        if (opts.badge) btn.querySelector('.ets-badge').textContent = opts.badge;
+                        if (opts.onClick) btn.addEventListener('click', opts.onClick);
+                        return btn;
+                    }
+
+                    function renderCrumb() {
+                        if (!crumbEl) return;
+                        crumbEl.innerHTML = '';
+                        var home = document.createElement('button');
+                        home.type = 'button';
+                        home.textContent = 'Programa';
+                        home.addEventListener('click', function () {
+                            stack = [];
+                            clearSelectionKeepStack();
+                            render();
+                        });
+                        crumbEl.appendChild(home);
+                        stack.forEach(function (frame, idx) {
+                            var sep = document.createElement('span');
+                            sep.className = 'sep';
+                            sep.textContent = '/';
+                            crumbEl.appendChild(sep);
+                            var b = document.createElement('button');
+                            b.type = 'button';
+                            b.textContent = frame.crumb || frame.title || ('Paso ' + (idx + 1));
+                            b.addEventListener('click', function () {
+                                stack = stack.slice(0, idx + 1);
+                                clearSelectionKeepStack();
+                                render();
+                            });
+                            crumbEl.appendChild(b);
+                        });
+                    }
+
+                    function pushFrame(frame) {
+                        clearSelectionKeepStack();
+                        stack.push(frame);
+                        render();
+                    }
+
+                    function renderCourses(frame) {
+                        var courses = frame.courses || [];
+                        var modality = frame.modality_value || '';
+                        var modalityLabel = frame.modality_label || frame.title || '';
+                        var groups = {};
+                        var order = [];
+
+                        courses.forEach(function (c) {
+                            var g = c.area_nombre || 'Cursos disponibles';
+                            if (!groups[g]) {
+                                groups[g] = [];
+                                order.push(g);
+                            }
+                            groups[g].push(c);
+                        });
+
+                        if (!order.length) {
+                            var empty = document.createElement('div');
+                            empty.className = 'ets-empty';
+                            empty.textContent = 'No hay cursos disponibles en esta opción por ahora.';
+                            bodyEl.appendChild(empty);
+                        } else {
+                            order.forEach(function (gName) {
+                                if (order.length &gt; 1) {
+                                    var h = document.createElement('div');
+                                    h.className = 'ets-group-title';
+                                    h.style.gridColumn = '1 / -1';
+                                    h.textContent = gName;
+                                    bodyEl.appendChild(h);
+                                }
+                                groups[gName].forEach(function (c) {
+                                    bodyEl.appendChild(makeCard({
+                                        title: c.nombre,
+                                        subtitle: c.anio_curso ? ('Año ' + c.anio_curso) : (c.area_nombre || ''),
+                                        icon: 'course',
+                                        selected: selectedCourseName === c.nombre,
+                                        onClick: function () {
+                                            applySelection(modality, c.nombre, modalityLabel);
+                                            render();
+                                        }
+                                    }));
+                                });
+                            });
+                        }
+
+                        bodyEl.appendChild(makeCard({
+                            title: 'Otro',
+                            subtitle: 'Si no aparece tu curso, especifícalo',
+                            icon: 'other',
+                            selected: selectedCourseName === otroValue,
+                            onClick: function () {
+                                applySelection(modality, otroValue, modalityLabel);
+                                render();
+                            }
+                        }));
+                    }
+
+                    function renderRoot() {
+                        (tree.options || []).forEach(function (opt) {
+                            bodyEl.appendChild(makeCard({
+                                title: (opt.num ? opt.num + '. ' : '') + (opt.title || ''),
+                                subtitle: opt.subtitle || '',
+                                badge: opt.badge || '',
+                                icon: opt.icon || 'graduation',
+                                onClick: function () {
+                                    if (opt.suboptions &amp;&amp; opt.suboptions.length) {
+                                        pushFrame({
+                                            type: 'suboptions',
+                                            title: opt.title,
+                                            subtitle: opt.subtitle,
+                                            crumb: opt.title,
+                                            items: opt.suboptions,
+                                        });
+                                    } else {
+                                        pushFrame({
+                                            type: 'courses',
+                                            title: opt.title,
+                                            subtitle: opt.subtitle,
+                                            crumb: opt.title,
+                                            modality_value: opt.modality_value,
+                                            modality_label: opt.modality_label || opt.title,
+                                            note: opt.note || '',
+                                            courses: opt.courses || [],
+                                        });
+                                    }
+                                }
+                            }));
+                        });
+                    }
+
+                    function renderSuboptions(frame) {
+                        (frame.items || []).forEach(function (item) {
+                            bodyEl.appendChild(makeCard({
+                                title: item.title || '',
+                                subtitle: item.subtitle || '',
+                                badge: item.badge || '',
+                                icon: item.icon || 'book',
+                                onClick: function () {
+                                    if (item.years &amp;&amp; item.years.length) {
+                                        pushFrame({
+                                            type: 'years',
+                                            title: item.title,
+                                            subtitle: item.subtitle,
+                                            crumb: item.title,
+                                            years: item.years,
+                                        });
+                                    } else {
+                                        pushFrame({
+                                            type: 'courses',
+                                            title: item.title,
+                                            subtitle: item.subtitle,
+                                            crumb: item.title,
+                                            modality_value: item.modality_value,
+                                            modality_label: item.modality_label || item.title,
+                                            note: item.note || '',
+                                            courses: item.courses || [],
+                                        });
+                                    }
+                                }
+                            }));
+                        });
+                    }
+
+                    function renderYears(frame) {
+                        (frame.years || []).forEach(function (yr) {
+                            var count = (yr.courses || []).length;
+                            bodyEl.appendChild(makeCard({
+                                title: yr.title || ('Año ' + yr.anio),
+                                subtitle: yr.subtitle || '',
+                                badge: count ? (count + ' cursos') : 'Sin cursos',
+                                icon: 'year',
+                                onClick: function () {
+                                    pushFrame({
+                                        type: 'courses',
+                                        title: yr.title,
+                                        subtitle: yr.subtitle,
+                                        crumb: yr.title,
+                                        modality_value: yr.modality_value,
+                                        modality_label: yr.modality_label || yr.title,
+                                        note: yr.note || '',
+                                        courses: yr.courses || [],
+                                    });
+                                }
+                            }));
+                        });
+                    }
+
+                    function render() {
+                        if (!bodyEl) return;
+                        bodyEl.innerHTML = '';
+                        bodyEl.className = 'ets-grid ets-grid-2';
+
+                        if (!tree || !tree.catalogo_listo || !(tree.options || []).length) {
+                            if (titleEl) titleEl.textContent = 'Catálogo no disponible';
+                            if (subEl) subEl.textContent = 'No se pudieron obtener los programas en este momento.';
+                            if (errorEl) errorEl.classList.remove('d-none');
+                            if (backBtn) backBtn.classList.add('d-none');
+                            setContactEnabled(false);
+                            return;
+                        }
+                        if (errorEl) errorEl.classList.add('d-none');
+
+                        var frame = stack.length ? stack[stack.length - 1] : null;
+                        if (titleEl) titleEl.textContent = frame ? (frame.title || 'Selecciona') : 'Elige tu programa';
+                        if (subEl) {
+                            subEl.textContent = frame
+                                ? (frame.subtitle || 'Continúa con la opción que mejor te represente.')
+                                : 'Selecciona la modalidad que más se acerque a tu interés.';
+                        }
+                        if (noteEl) {
+                            var note = frame &amp;&amp; frame.note ? frame.note : '';
+                            noteEl.textContent = note;
+                            noteEl.classList.toggle('d-none', !note);
+                        }
+                        if (backBtn) {
+                            backBtn.classList.toggle('d-none', !stack.length);
+                        }
+                        renderCrumb();
+
+                        if (!frame) renderRoot();
+                        else if (frame.type === 'suboptions') renderSuboptions(frame);
+                        else if (frame.type === 'years') renderYears(frame);
+                        else renderCourses(frame);
+                    }
+
+                    if (backBtn) {
+                        backBtn.addEventListener('click', function () {
+                            stack.pop();
+                            clearSelectionKeepStack();
+                            render();
+                        });
+                    }
+                    if (clearBtn) {
+                        clearBtn.addEventListener('click', function () {
+                            clearSelectionKeepStack();
+                            if (stack.length &amp;&amp; stack[stack.length - 1].type === 'courses') {
+                                render();
+                            } else {
+                                stack = [];
+                                render();
+                            }
+                            if (bodyEl) bodyEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        });
+                    }
+
+                    var phone = document.getElementById('phone');
+                    if (phone) {
+                        phone.addEventListener('input', function () {
+                            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
                         });
                     }
 
@@ -238,6 +751,35 @@
                         });
                     }
                     toggleCarnet();
+
+                    var form = document.getElementById('form-principal');
+                    if (form) {
+                        form.addEventListener('submit', function (ev) {
+                            if (!modalityField || !modalityField.value) {
+                                ev.preventDefault();
+                                alert('Selecciona un programa antes de enviar.');
+                                return;
+                            }
+                            if (!courseField || !courseField.value) {
+                                ev.preventDefault();
+                                alert('Selecciona un curso antes de enviar.');
+                                return;
+                            }
+                            if (courseField.value === otroValue &amp;&amp; (!otroInp || !otroInp.value.trim())) {
+                                ev.preventDefault();
+                                alert('Especifica el curso en el campo Otro.');
+                                return;
+                            }
+                            var phoneVal = (phone &amp;&amp; phone.value) || '';
+                            if (phoneVal.length !== 8) {
+                                ev.preventDefault();
+                                alert('El teléfono debe tener 8 dígitos.');
+                            }
+                        });
+                    }
+
+                    setContactEnabled(false);
+                    render();
                 });
             </script>
         </t>
